@@ -171,36 +171,37 @@ JavaScript Engineによって実行結果が異なることがある．
     ```
 
 - this
-thisは，関数が呼び出された際に，その関数がどのように呼び出されたかによって値が変わる．  
-以下の場合，thisはpersonオブジェクトを指す．
-```js
-const person = {
-    name: 'Tom',
-    hello: function() {
-        console.log('Hello ' + this.name);
+    - thisの値
+    thisは，関数が呼び出された際に，その関数がどのように呼び出されたかによって値が変わる．  
+    以下の場合，thisはpersonオブジェクトを指す．
+    ```js
+    const person = {
+        name: 'Tom',
+        hello: function() {
+            console.log('Hello ' + this.name);
+        }
     }
-}
-person.hello();
-```
+    person.hello(); // Hello Tom
+    ```
 
-以下の場合，thisはglobalオブジェクトを指す．
-```js
-window.name = 'John';
-const person = {
-    name: 'Tom',
-    hello: function() {
-        console.log('Hello ' + this.name);
+    以下の場合，thisはglobalオブジェクトを指す．
+    ```js
+    window.name = 'John';
+    const person = {
+        name: 'Tom',
+        hello: function() {
+            console.log('Hello ' + this.name);
+        }
     }
-}
-const ref = person.hello;
-ref();
-```
+    const ref = person.hello; 
+    ref(); // Hello John
+    ```
 
-つまり，オブジェクトのメソッドとして呼び出された場合は，そのオブジェクトを指す．
-一方，関数として呼び出された場合は，globalオブジェクトを指す．
+    つまり，オブジェクトのメソッドとして呼び出された場合は，そのオブジェクトを指す．  
+    一方，関数として呼び出された場合は，globalオブジェクトを指す．  
 
     - bindによる固定  
-    上のような状況を回避するにはどうしたら良いのだろうか？
+    上のような状況を回避するにはどうしたら良いのだろうか？  
 
     ```js
     window.name = 'John';
@@ -216,3 +217,23 @@ ref();
     const ref = person.hello.bind(person); // Hello Tom
     ref();
     ```
+
+    - call, applyによるthisの値の変更
+    call, applyは，関数を呼び出す際にthisの値を変更することができる．
+    また，実行も行われる．
+
+    ```js
+    function a() {
+        console.log('hello ' + this.name); 
+    }
+    
+    const tim = { name: 'Tim' };
+    const b = a.bind(tim);
+    b(); // hello Tim
+    
+    a.call(tim); // hello Tim
+    b.apply(tim); // hello Tim
+    ```
+    
+    また，apply, callは引数を渡すこともできる．
+    そして，applyは配列を，callはカンマ区切りの引数を渡す．
