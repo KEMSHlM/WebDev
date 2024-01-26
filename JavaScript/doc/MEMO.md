@@ -154,6 +154,9 @@ JavaScript Engineによって実行結果が異なることがある．
     -> 調べてみたらやはり地獄だった．しかも，対応状況はブラウザによって異なる．  
     > [JSにおけるdeepcopy](https://zenn.dev/akkie1030/articles/js-structured-clone)
     
+    プリミティブ，オブジェクトともに引数に渡す際も同様な処理がなされる．
+    留意する必要があるのは，関数もオブジェクトであるということ．
+    
     - 参照とconst
     
     ```js
@@ -165,4 +168,51 @@ JavaScript Engineによって実行結果が異なることがある．
     
     // しかし，以下はできる．
     a.prop = 'Bye';
+    ```
+
+- this
+thisは，関数が呼び出された際に，その関数がどのように呼び出されたかによって値が変わる．  
+以下の場合，thisはpersonオブジェクトを指す．
+```js
+const person = {
+    name: 'Tom',
+    hello: function() {
+        console.log('Hello ' + this.name);
+    }
+}
+person.hello();
+```
+
+以下の場合，thisはglobalオブジェクトを指す．
+```js
+window.name = 'John';
+const person = {
+    name: 'Tom',
+    hello: function() {
+        console.log('Hello ' + this.name);
+    }
+}
+const ref = person.hello;
+ref();
+```
+
+つまり，オブジェクトのメソッドとして呼び出された場合は，そのオブジェクトを指す．
+一方，関数として呼び出された場合は，globalオブジェクトを指す．
+
+    - bindによる固定  
+    上のような状況を回避するにはどうしたら良いのだろうか？
+
+    ```js
+    window.name = 'John';
+
+    const person = {
+        name: 'Tom',
+        hello: function() {
+            console.log('Hello ' + this.name);
+        }
+    }
+
+    // 上を回避するには，bindを使う
+    const ref = person.hello.bind(person); // Hello Tom
+    ref();
     ```
