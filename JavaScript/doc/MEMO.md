@@ -232,8 +232,69 @@ JavaScript Engineによって実行結果が異なることがある．
     b(); // hello Tim
     
     a.call(tim); // hello Tim
-    b.apply(tim); // hello Tim
+    a.apply(tim); // hello Tim
     ```
     
     また，apply, callは引数を渡すこともできる．
     そして，applyは配列を，callはカンマ区切りの引数を渡す．
+    thisが必要ない場合は，nullを渡す．
+    ```js
+    // *.call(thisの値，引数1，引数2，...)
+    a.call(tim, 1, 2, 3); // hello Tim
+    // *.apply(thisの値，[引数1，引数2，...])
+    a.apply(tim, [1, 2, 3]); // hello Tim
+    ```
+    
+    - アロー関数
+    アロー関数によって，記述量を減らすことができる．
+    ```js
+    function a(name) {
+        return 'hello ' + name;
+    }
+
+    const b = function(name) {
+        return 'hello ' + name;
+    }
+    // 省略して
+    const c = (name) => {
+        return 'hello ' + name;
+    }
+
+    // さらに省略して
+    // 引数が1つの場合は()も省略できる
+    // returnが1行の場合は{}とreturnも省略できる
+    const d = name => 'hello ' + name;
+    ```
+    しかしながら，以下のように機能が縛られる．
+
+    |   | 無名関数 | アロー関数 |
+    | ---- | ---- | ---- |
+    | this | o | x |
+    | argments | o | x |
+    | new | o | x |
+    | prototype | o | x |
+
+    アロー関数はthisを持たないため，thisを参照するときは，外側のスコープのthisを参照することになる．
+    ```js
+    window.name = 'John';
+
+    const person = {
+        // これはアロー関数
+        // 無名関数はthisを持たない，そのためスコープチェーンで上の階層にthisを探しに行く
+        hello_arrow: () => {
+            console.log('Hello ' + this.name);
+            a();
+        }
+    }
+    ```
+    
+    また以下のように, アロー関数を使うとthisがglobalオブジェクトを参照する．
+    ```js
+    window.name = 'John';
+
+    // レキシカルスコープは，関数が定義された場所によって決まる
+    // thisを持たないので，スコープチェーンで上の階層にthisを探しに行く
+    // すなわちここでの定義はグローバルスコープがレキシカルスコープになる．
+    const a = () => console.log('Bye ' + this.name);
+    ```
+
