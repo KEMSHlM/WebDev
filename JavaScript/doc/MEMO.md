@@ -298,3 +298,99 @@ JavaScript Engineによって実行結果が異なることがある．
     const a = () => console.log('Bye ' + this.name);
     ```
 
+
+- プロトタイプ(prototype)
+プロトタイプとは，オブジェクトの元となるオブジェクトのことを指す．
+プロトタイプを使うことで，オブジェクトの複製ができる他，__proto__を参照のコピーを使って，オブジェクトの継承を実現することができる．
+通常であれば，オブジェクト内の関数などが他のメモリ領域にコピーされるところが，参照のコピーを使うことで，メモリの節約ができる．
+
+```js
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+Person.prototype.hello = function() {
+    console.log('Hello ' + this.name);
+}
+
+const bob = new Person('Bob', 18);
+
+bob.hello();
+
+console.log(bob.__proto__ === Person.prototype) // -> true
+
+```
+ここで，bob.__proto__ === Person.prototype が成り立っており，
+__proto__がfunction() { .. }のオブジェクトへの参照を保持していることになる．
+prototypeを使うと，メモリの節約になる
+
+また，オブジェクトの返り値にオブジェクトを持たせると機能が大きく異なることがある．（クソ仕様では？）  
+詳しくは， [オブジェクトを返り値に持つ際の, オブジェクト生成挙動の変化](../060_Function2/030_new/main.js) を参照
+
+- Class 
+書き方が違うだけで，オブジェクトと同じ．ES6から導入された．
+オブジェクトとクラスは，Prototye Chainでつながっている．
+
+
+- 継承
+下記のようなコードでは，
+![プロトタイプチェーン](./image/1.png)
+
+```JS
+class Person {
+    constructor (name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    hello() {
+        console.log('class: hello ' + this.name);
+    }
+}
+
+class Japanese extends Person {
+    constructor (name, age, gender) {
+        super(name, age);
+        this.gender = gender;
+    }
+
+    hello() {
+        console.log('Japanese: hello ' + this.name);
+    }
+    hello() {
+        console.log('Japanese: bye ' + this.name);
+    }
+}
+
+const bob = new Japanese('Bob', 23, 'Male');
+console.log(bob);
+```
+また，Superを使うことで，親クラスのコンストラクタを呼び出すことができる．
+
+- Chain Method
+メソッドチェーンとは，メソッドを連続して呼び出すこと．
+```JS
+class Person {
+    constructor (name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    hello() {
+        console.log('hello ' + this.name);
+        return this; // return を追加
+    }
+    
+    bye() {
+        console.log('bye ' + this.name);
+        return this;
+    }
+
+}
+
+const bob = new Person('Bob', 23);
+bob.hello().bye();
+```
+
+```
