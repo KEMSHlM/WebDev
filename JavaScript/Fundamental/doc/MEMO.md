@@ -561,7 +561,7 @@ JavaScript Engineによって実行結果が異なることがある．
         ```
     
     - タスクキュー（Task Queue）  
-        キューは，**FIFO(First In, First Out: 先入れ先出し)**のデータ構造．  
+        キューは，**FIFO**(First In, First Out: 先入れ先出し)のデータ構造．  
 
         Call Stack と Task Queue は，**Event Loop**によって管理されている．  
         **Call Stackを実行し終わった後， Task Queueに積まれた処理をCall Stackに戻して実行する．**
@@ -649,3 +649,38 @@ JavaScript Engineによって実行結果が異なることがある．
                実際は[consoleCIS]が先に送られている．
             
             > 参考: [Visualizer: タスクキュー](https://www.jsv9000.app/?code=ZnVuY3Rpb24gY29uc29sZUNJRigpIHsKICBjb25zb2xlLmxvZygiY2FsbGJhY2sgaW4gZmlyc3QiKTsKfQoKZnVuY3Rpb24gY29uc29sZUNJUygpIHsKICBjb25zb2xlLmxvZygiY2FsbGJhY2sgaW4gc2Vjb25kIik7Cn0KCmZ1bmN0aW9uIGZpcnN0KCkgewogIGNvbnNvbGUubG9nKCJmaXJzdCIpOwogIHNldFRpbWVvdXQoY29uc29sZUNJRiwgMzAwKSAKfQoKZnVuY3Rpb24gc2Vjb25kKCkgewogIGNvbnNvbGUubG9nKCJzZWNvbmQiKTsKICBzZXRUaW1lb3V0KGNvbnNvbGVDSVMsIDApCn0KCmZ1bmN0aW9uIEdDKCkgewogIGZpcnN0KCk7CiAgc2Vjb25kKCk7Cn0KCkdDKCk7Cg%3D%3D)  
+        
+    - Promise  
+        非同期処理をより簡単に，可読性が上がるように実装するための仕組み．  
+
+    - Macro and Micro Task
+        Macro Taskとは，setTimeout, setInterval, setImmediate, I/O, UI renderingなどの非同期処理．  
+        Micro Taskとは，Promise, process.nextTickなどの非同期処理．  
+        
+        そして，以下のスクリプトは，以下の順番で実行される．  
+        2 -> 4 -> 3 -> 1
+
+        ```js
+        // Macro Task 
+        setTimeout(function() {
+            console.log('1: setTimeout');
+        });
+
+        new Promise(function promise(resolve) {
+            console.log('2: promise'); 
+            resolve();
+        // Micro Task
+        }).then(function job1() {
+            console.log('3: job1');
+        });
+
+        console.log('4: global end');
+        ```
+        
+        また，二つのタスクの違いは，
+        Micro Taskは，順番がまわってきたら，すぐに実行される．  
+        Macro Taskは，順番がまわってきたら，一つずつ実行される．  
+        
+        すなわち，Micro Taskが必ず優先されて実行される．  
+        
+
