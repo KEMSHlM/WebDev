@@ -1,4 +1,12 @@
-# about JavaScript
+# Study JavaScript
+
+### Overview
+- このリポジトリは大枠は[[JS]ガチで学びたい人のためのJavaScriptメカニズム(udemy)](https://www.udemy.com/course/javascript-essence/)の学習記録である．  
+
+- このコースを受けていく中で，非同期処理の説明には不足を感じた.  
+そのため，[JavaScript [非同期処理]](https://qiita.com/sho_U/items/f07a4f3e7760a9729f10#resolve-reject)を参考にして，疑問点を解消した．  
+
+
 ## 1. JavaScriptの歴史
 ECMAScriptは，JavaScriptのコアになる仕様である.これは，混在するブラウザ間の互換性を保つために，ECMA Internationalによって標準化されたものである.  
 実行環境には，ブラウザ環境とNode.js環境がある.
@@ -52,6 +60,7 @@ JavaScript Engineによって実行結果が異なることがある．
     コンテキスト内で宣言した変数や関数の定義をコード実行前にメモリーに配置すること．
     すなわち以下のコードでも実行することができる．
 
+    #### コード例
     ```js
     a();
 
@@ -68,6 +77,7 @@ JavaScript Engineによって実行結果が異なることがある．
     このスクリプトスコープはグローバルスコープに内包される．
 
     - レキシカルスコープ(Lexical Scope)
+        以下の二つの文脈で使われる．  
         1. 実行中のコードからみた外部スコープのこと．
         2. どのようにしてそのスコープを決定するかの仕様を指す．
 
@@ -75,14 +85,16 @@ JavaScript Engineによって実行結果が異なることがある．
         コードを記述した時点で，決定されるため「静的スコープ」と呼ばれる．
         関数は，自身のスコープより外側のスコープにはアクセスすることができる．　　
 
+        #### コード例
         ```js
-        // グローバルスコープ
+        // スクリプトスコープ
         let a = 2;
         function fn1() {
             // ローカルスコープ(fn1)
             let b = 1;
-            // ローカルスコープ(fn2)
+
             function fn2() {
+                // ローカルスコープ(fn2)
                 let c = 3;
                 // クロージャー，スコープチェーン
                 console.log(b);
@@ -106,6 +118,7 @@ JavaScript Engineによって実行結果が異なることがある．
     - 即時関数
         以下のような書き方．
 
+        #### コード例
         ```js
         let c = (function (d) {
             console.log("values is " + d);
@@ -126,6 +139,8 @@ JavaScript Engineによって実行結果が異なることがある．
     - コピー, 再代入メモリ挙動  
 
         以下は，プリミティブ型の挙動
+        #### コード例
+
         ```js
         // 以下は，c言語と同じ挙動イメージ．
         let a = 'hello';
@@ -137,6 +152,8 @@ JavaScript Engineによって実行結果が異なることがある．
         ```
     
         以下は，オブジェクトの挙動
+
+        #### コード例
         ```js
         let a = {
             prop: 'hello'
@@ -159,6 +176,7 @@ JavaScript Engineによって実行結果が異なることがある．
         留意する必要があるのは，関数もオブジェクトであるということ．
     
     - 参照とconst
+        #### コード例
         ```js
         const a = {
             prop: 'hello'
@@ -170,11 +188,30 @@ JavaScript Engineによって実行結果が異なることがある．
         a.prop = 'Bye';
         ```
 
+- ### 同期型コールバック　　
+    コールバック関数とは, 引数として他の関数に渡され, 外側の関数の中で呼び出されて,何らかのルーチンやアクションを完了させる関数.
+
+    #### コード例
+    ```js
+    function greeting(name) {
+      alert(`Hello, ${name}`);
+    }
+
+    function processUserInput(callback) {
+      const name = prompt("Please enter your name.");
+      callback(name);
+    }
+
+    processUserInput(greeting);
+    ```
+
+
 - ### this
     - thisの値  
         thisは，関数が呼び出された際に，その関数がどのように呼び出されたかによって値が変わる．  
         以下の場合，thisはpersonオブジェクトを指す．
 
+        #### コード例
         ```js
         const person = {
             name: 'Tom',
@@ -186,6 +223,7 @@ JavaScript Engineによって実行結果が異なることがある．
         ```
 
         以下の場合，thisはglobalオブジェクトを指す．
+        #### コード例
         ```js
         window.name = 'John';
         const person = {
@@ -204,6 +242,7 @@ JavaScript Engineによって実行結果が異なることがある．
     - bindによる固定  
         上のような状況を回避するにはどうしたら良いのだろうか？  
 
+        #### コード例
         ```js
         window.name = 'John';
 
@@ -223,6 +262,8 @@ JavaScript Engineによって実行結果が異なることがある．
         call, applyは，関数を呼び出す際にthisの値を変更することができる．
         また，実行も行われる．
 
+        #### コード例
+
         ```js
         function a() {
             console.log('hello ' + this.name); 
@@ -240,6 +281,7 @@ JavaScript Engineによって実行結果が異なることがある．
         そして，applyは配列を，callはカンマ区切りの引数を渡す．  
         thisが必要ない場合は，nullを渡す．  
 
+        #### コード例
         ```js
         // *.call(thisの値，引数1，引数2，...)
         a.call(tim, 1, 2, 3); // hello Tim
@@ -249,6 +291,8 @@ JavaScript Engineによって実行結果が異なることがある．
     
     - アロー関数
         アロー関数によって，記述量を減らすことができる．
+
+        #### コード例
         ```js
         function a(name) {
             return 'hello ' + name;
@@ -278,6 +322,7 @@ JavaScript Engineによって実行結果が異なることがある．
 
         アロー関数はthisを持たないため，thisを参照するときは，外側のスコープのthisを参照することになる．
 
+        #### コード例
         ```js
         window.name = 'John';
 
@@ -293,6 +338,7 @@ JavaScript Engineによって実行結果が異なることがある．
         
         また以下のように, アロー関数を使うとthisがglobalオブジェクトを参照する．
 
+        #### コード例
         ```js
         window.name = 'John';
 
@@ -309,6 +355,7 @@ JavaScript Engineによって実行結果が異なることがある．
 
     通常であれば，オブジェクト内の関数などが他のメモリ領域にコピーされるところが，参照のコピーを使うことで，メモリの節約ができる．
 
+    #### コード例
     ```js
     function Person(name, age) {
         this.name = name;
@@ -479,6 +526,8 @@ JavaScript Engineによって実行結果が異なることがある．
     ジェネレータは，イテレータを生成する関数．
 
     イテレータは以下のように定義できる．
+
+    #### コード例
     ```js
     function genIterator(max) {
         let i = 0;
@@ -505,6 +554,8 @@ JavaScript Engineによって実行結果が異なることがある．
     ```
 
     さらにジェネレータは少ない記述量でイテレータを定義できる．
+    
+    #### コード例
     ```js
     function* genIterator(max = 10) {
         for (i=0; i < max; i++) {
@@ -538,6 +589,8 @@ JavaScript Engineによって実行結果が異なることがある．
 
     - 非同期処理  
         一時的にメインスレッドから処理が切り離される．
+
+        #### コード例
         ```js
         // index.html にボタンを追加する必要がある．
         function sleep(ms) {
@@ -571,6 +624,7 @@ JavaScript Engineによって実行結果が異なることがある．
         実行の手順を確認するには，[JavaScript Visualizer 9000](https://www.jsv9000.app/?code=ZnVuY3Rpb24gYSgpIHsKICBjb25zb2xlLmxvZygiYSIpCn0KZnVuY3Rpb24gYigpIHsKICBjb25zb2xlLmxvZygiYiIpCn0KZnVuY3Rpb24gYygpIHsKICBjb25zb2xlLmxvZygiYyIpCn0KCmEoKTsKYigpOwpjKCk7)を利用するとよさそう．  
         
         - Examle 1
+            #### コード例
             ```js
             function a() { console.log("a") }
             function consoleB() { console.log("B") }
@@ -602,6 +656,7 @@ JavaScript Engineによって実行結果が異なることがある．
             > 参考: [Visualizer: タスクキュー](https://www.jsv9000.app/?code=ZnVuY3Rpb24gYSgpIHsgY29uc29sZS5sb2coImEiKSB9CmZ1bmN0aW9uIGNvbnNvbGVCKCkgeyBjb25zb2xlLmxvZygiQiIpIH0KZnVuY3Rpb24gYigpIHsgc2V0VGltZW91dChjb25zb2xlQiwgMCkgfQpmdW5jdGlvbiBjKCkgeyBjb25zb2xlLmxvZygiYyIpIH0KCmZ1bmN0aW9uIEdDKCl7CiAgYSgpOwogIGIoKTsKICBjKCk7Cn0KCkdDKCk7)  
         
         - Example 2
+            #### コード例
             ```js
             function consoleCIF() {
                 console.log("callback in first");
@@ -652,14 +707,114 @@ JavaScript Engineによって実行結果が異なることがある．
         
     - Promise  
         非同期処理をより簡単に，可読性が上がるように実装するための仕組み．  
+        Promiseを用いた非同期処理の関数は，コールバック関数で連鎖させるのではなく，Promiseクラスのインスタンスで非同期を連鎖させる．　　
+        
+        Promseクラスのコンストラクタに渡される最初の処理を**Excutor**と呼ぶ．  
+        そのExcutor自体は，コールスタックに積まれて即時実行される．  
+        
+        以下の例は，a -> b -> c で実行されることに注意．  
 
-    - Macro and Micro Task
+        #### コード例
+        ```js
+        console.log("a")
+
+        new Promise(() => {
+          console.log("b");
+        })
+
+        console.log("c");
+        ```
+        
+        Promiseのインスタンスのコンストラクタに渡されるExcutorは，resolveとrejectを引数に持つ．  
+
+        - resolve, reject  
+            resolveは，正常処理．  
+            rejectは，例外処理のための関数．  
+            
+            #### コード例
+            ```js
+            const calcAdd = (v1, v2) => v1 + v2;
+            const logV = () => { console.log("正常:50以上です。") }
+            const logI = (r) => { console.log(`異常:49以下です。結果:${r}`) }//rejectに渡された引数rが渡ってくる。
+
+            new Promise((resolve, reject) => {
+                const r = calcAdd(20, 20);
+                if (r >= 50) {
+                    resolve()
+                } else {
+                    reject(r) //計算結果をコールバックに渡す。
+                }
+            }).then(logV).catch(logI)
+            // 以下でも同様の表現が可能．
+            // resolve, rejectが実行されると，
+            // それぞれthenの第一引数,第二引数の関数が実行される．
+            // }).then(logV, logI)
+
+            //=> 異常:49以下です。結果:40
+            ```
+            
+        - Promise のインスタンスの状態  
+            Promise は，以下の三つの状態を持つ．  
+            1. pending: 未解決 
+            2. fulfilled: 解決
+            3. rejected: 拒否  
+            
+            promiseインスタンスは作成された初期は, pending状態である．  
+            resolveされた場合，Fullfilled状態になる．  
+            rejectされた場合，Rejected状態になる．  
+            
+            以下の例は，注意が必要.  
+
+            #### コード例
+            ```js
+            const p = new Promise((resolve) => {
+                queueMicrotask(() => { 
+                    resolve();
+                    console.log(p); //② resolveされるとfullfilledに変わる。
+                })
+            })
+
+            console.log(p); //① まだresolveされていないので、pending
+
+            // ① Promise {<pending>}
+            // ② Promise {<fulfilled>: undefined}
+            ```
+            
+            重要なポイントは，resolve, rejectが実行されるのは，Promiseインスタンスがpendingの状態のときのみである．  
+
+            そのため，**一度でもfullfilledもしくは，rejectedになった時は, resolve, reject**は実行されない．
+            また，rejectが実行された後に返されれるPromiseインスタンスは，resolvedの状態になることに注意．
+            
+            #### コード例
+            ```js
+            const p = new Promise((resolve, reject) => {
+                resolve(); //thenメソッドの第1引数のコールバックを実行。状態を"fulfilled"に変更。
+                reject(); //状態が"fulfilled"のため、thenメソッドの第2引数のコールバックは実行されない。
+            }).then(() => { console.log("正常") }, () => { console.log("異常") })
+
+            //=> 正常
+            ```
+            
+            以下のような条件は注意が必要.   
+            new Promiseのインスタンスはfullfilledになるが，そのインスタンスがthenメソッドを実行する．  
+            thenメソッドが返すPromiseインスタンスは，pendingの状態になる．  
+
+            #### コード例
+            ```js
+            const p = new Promise((resolve, reject) => {
+                resolve();
+            }).then(() => { console.log(p) })
+            // -> pending
+            ```
+
+    - Macro and Micro Task  
         Macro Taskとは，setTimeout, setInterval, setImmediate, I/O, UI renderingなどの非同期処理．  
         Micro Taskとは，Promise, process.nextTickなどの非同期処理．  
         
         そして，以下のスクリプトは，以下の順番で実行される．  
         2 -> 4 -> 3 -> 1
 
+        #### コード例
         ```js
         // Macro Task 
         setTimeout(function() {
@@ -684,3 +839,174 @@ JavaScript Engineによって実行結果が異なることがある．
         すなわち，Micro Taskが必ず優先されて実行される．  
         
 
+    - async  
+        asyncは，非同期関数を定義する関数宣言であり，関数の頭につけることでPromiseオブジェクトを返す関数にすることができる．  
+
+        #### コード例
+        ```js
+        const asyncFunc = async () => {
+            return 1;
+        };
+        
+        console.log(asyncFunct());
+        ```
+
+        async functionが値をreturnした場合，Promiseは戻り値をresolveする．  
+        その値はPromiseValueとして扱われれる．  
+        
+        ![async](https://camo.qiitausercontent.com/7f23caab0e1d007587977f2ba96a49ba857e715f/68747470733a2f2f71696974612d696d6167652d73746f72652e73332e61702d6e6f727468656173742d312e616d617a6f6e6177732e636f6d2f302f3134323332322f38623532373765632d656362362d393065342d663765632d6438333237613833313065622e706e67)
+        
+        
+    - await  
+        awaitは，Promiseオブジェクが値を返すまで待機する演算子．  
+        awaitは必ず，async function内で使える．  
+        
+        以下では，awaitをつけないとNaNが出力される．  
+
+        #### コード例
+        ```js
+        const asyncFunc = async () => {
+            let x, y;
+            // Promiseがresolveするまで待機
+            x = await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(1);
+                }, 1000);
+            });
+            // Promiseがresolveするまで待機
+            y = await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(1);
+                }, 1000);
+            });
+
+            console.log(x + y);
+        }; // -> 2
+        ```
+
+    - fetch  
+        fetch APIは，リクエストやレスポンスといったプロトコルを操作する要素にアクセスするためのインターフェース．  
+        非同期にネットワーク越しでリソースを取得することができる．  
+        そのため，fetch APIは，Promiseを返す．  
+        
+        #### コード例
+        ```js:fetch.js
+        window.fetch('./users.json').then(function (response) {
+            conosle.log("response: ");
+            console.log(response);
+            return response.json();
+        }).then(function (json) {
+            conosle.log("json: ");
+            console.log(json);
+            conosle.log("output: ");
+            for (const user of json) {
+                console.log("I am " + user.name + ", " + user.age + " years old.");
+            }
+        });
+        ```
+
+        #### コンソール出力
+        ```console
+        response:
+        Response {type: 'basic', url: 'http://127.0.0.1:5501/080_Async/110_fetch/users.json', redirected: false, status: 200, ok: true, …}
+
+        json:
+        (3) [{…}, {…}, {…}]
+        0 : {name: 'Bob', age: 23}
+        1 : {name: 'Tim', age: 30}
+        2 : {name: 'Sum', age: 25}
+        length : 3 
+        [[Prototype]] : Array(0)
+
+        output:
+        I am Bob, 23 years old.
+        I am Tim, 30 years old.
+        I am Sum, 25 years old.
+        ```
+
+- Modueler  
+    Browserでは，ES Modlesというモジュールシステムが使われている．
+    Nodejsでは，CommonJSというモジュールシステムが使われている．
+
+    |   |　ESM | CJS |
+    | ---- | ---- | ---- |
+    | キーワード  |　文字列 | 制約なし |
+    | 動作環境 | Browser | Node.js |
+    | 拡張子 | .mjs  | .cjs |
+    
+    #### *.html
+    #### export
+    #### import
+    
+    - importした変数は，通常のコピーと同じ挙動を示すので，プリミティブ型の変数は，値のコピーが渡される．  
+    - スクリプトスコープがモジュールスコープになる．   
+    - モジュールは，非同期で読み込まれる．  
+        #### html
+        ```html
+        <script src="./main.js" defer></script> // <= 非同期で読み込む
+        <h1> Module Lecture </h1> // <= 上にdeferがあるため，先に読み込まれる
+        <script type="module" src="./moduleB.js"></script> // <= モジュールは初期で, 非同期で読み込む
+        ```
+
+    - Strict Mode
+        モジュールは，自動的にStrict Modeになる．一部の書き方が制限される．  
+        1. 意図しないバグの混入の防止.
+        2. 予約後の確保．
+        3. コードのセキュア化.
+
+        windowオブジェクトにアクセスできない．   
+        #### コード例
+        ```js
+        'use strict'
+        a = 0;
+        
+        console.log(a); // => error
+        ```
+        
+        class は，暗黙的にstrict modeになる．  
+        
+        
+    - Dynamic Import (比較的に新しい機能なので，ブラウザによっては対応していない．)
+    ```js
+    import('./moduleB.js').then(function(module) {
+        console.log(modules);
+        modules.publicFn();
+    });
+    ```
+
+- ### ブラウザ 
+    - Proxy  
+        プロパティの操作に独自の処理を追加することができる． 
+        各操作をトラップしているとも言える．  
+
+        ```js
+        const targetObj = {a: 0};
+        const handler = {
+            set: function(target, prop, value, receiver) {
+                console.log(`[set]: ${prop}`);
+                target[prop] = value;
+            },
+            get: function (target, prop, receiver) {
+                console.log(`[get]: ${prop}`);
+                return target[prop];
+            },
+            deleteProperty: function (target, prop) {
+                console.log(`[delete]: ${prop}`);
+                delete target[prop];
+            },
+        };
+
+        const pxy = new Proxy(targetObj, handler);
+        pxy.a = 1; // [set]: a
+        pxy.a; // [get]: a
+        delete pxy.a; // [delete]: a
+        ```
+
+    - Reflect  
+        JSエンジンの内部の汎用的な関数を呼び出すためのメソッドが格納されているオブジェクト．  
+        
+        
+        
+        
+
+        
