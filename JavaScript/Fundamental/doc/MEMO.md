@@ -967,6 +967,8 @@ JavaScript Engineによって実行結果が異なることがある．
         
         
     - Dynamic Import (比較的に新しい機能なので，ブラウザによっては対応していない．)
+
+    #### コード例
     ```js
     import('./moduleB.js').then(function(module) {
         console.log(modules);
@@ -974,11 +976,12 @@ JavaScript Engineによって実行結果が異なることがある．
     });
     ```
 
-- ### ブラウザ 
+- ### 他のオブジェクト 
     - Proxy  
         プロパティの操作に独自の処理を追加することができる． 
-        各操作をトラップしているとも言える．  
+        各操作をトラップすることができる．  
 
+        #### コード例
         ```js
         const targetObj = {a: 0};
         const handler = {
@@ -1004,9 +1007,34 @@ JavaScript Engineによって実行結果が異なることがある．
 
     - Reflect  
         JSエンジンの内部の汎用的な関数を呼び出すためのメソッドが格納されているオブジェクト．  
-        
-        
-        
-        
+        Reflectを使うことで，関数形式で呼び出すことができる．  
 
+        #### コード例
+        ```js
+        const bob = {
+            name: 'Bob',
+            _hello: function() {
+                console.log(`Hello ${this.name}`);
+            }
+        }
+
+        const tom = {
+            name: 'Tom',
+            _hello: function() {
+                console.log(`Hello ${this.name}`);
+            },
+            get hello() {
+                console.log(this);
+                return this._hello();
+            },
+        }
+
+        tom.hello;
+        Reflect.get(tom, 'hello');
+        //　第三引数は，bindに近い動き
+        Reflect.get(tom, 'hello', bob);
+        ```
+        
+        Proxy と Reflect を組み合わせることで，より柔軟なプログラミングが可能になる．   
+        
         
