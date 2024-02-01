@@ -1,7 +1,10 @@
 1. Todoリストアプリの作成  
-    TypeScriptを使用してTodoリストアプリを作成してください。タスクを追加、表示、削除する機能を実装してください。
-        うーん，index.html, style.css, main.ts生成してもらったんやけど，紐付けわからん.
-        -> tsconfig.json 変えたら，動いた．
+TypeScriptを使用してTodoリストアプリを作成してください。タスクを追加、表示、削除する機能を実装してください。
+
+    うーん，index.html, style.css, main.ts生成してもらったんやけど，紐付け?わからん.
+    -> tsconfig.json 変えたら，動いた．
+    module: "commonJS" -> module: "nextES"
+    これは，commonJSがnode.jsのモジュールシステムで，nextESがブラウザのモジュールシステムであるためらしい．  
 
 2. シンプルなブログ投稿アプリ  
     ユーザーが記事を投稿できるシンプルなブログアプリを作成してください。各記事にはタイトルと内容が含まれます。
