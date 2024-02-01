@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TaskList = exports.Task = void 0;
-class Task {
+export class Task {
     constructor(description, taskStatus = 'Pending') {
         this.description = description;
         this.taskStatus = taskStatus;
@@ -15,8 +12,7 @@ class Task {
         return this.taskStatus;
     }
 }
-exports.Task = Task;
-class TaskList extends Map {
+export class TaskList extends Map {
     constructor() {
         super();
     }
@@ -38,4 +34,3 @@ class TaskList extends Map {
         return false;
     }
 }
-exports.TaskList = TaskList;
