@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "types": [
+          "jest"
+        ],
+      "esModuleInterop": true,
+      "lib": ["ES2022", "DOM"]
+    }
+}
