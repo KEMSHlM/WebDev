@@ -18,7 +18,7 @@ abstract class Entry {
 class Group extends Entry {
     private entries: Entry[] = [];
     
-    add(entry: Entry) {
+    add(entry: Entry): void {
         this.entries.push(entry);
     } 
     
@@ -26,12 +26,13 @@ class Group extends Entry {
         return this.entries; 
     }
     
-    accept(visitor: Visitor) {
+    accept(visitor: Visitor): void {
         visitor.visit(this);
     }
 }
 
 class Employee extends Entry {
+    // まあ，インターン生とか持つならChildrenが必要かもね.
     getChildren(): Entry[] {
         return [];
     }
@@ -41,6 +42,7 @@ class Employee extends Entry {
     }
 }
 
+// visitがそれぞれ実行される処理．
 interface Visitor {
     visit(entry: Entry);
 }
@@ -53,6 +55,7 @@ class ListVisitor implements Visitor {
             console.log(` ${entry.getCode()}: ${entry.getName()}`);
         }
         
+        // このようにして，子に対してもvisitを実行させる．
         entry.getChildren().forEach(child => child.accept(this));
     }
 }
@@ -67,6 +70,9 @@ class CountVisitor implements Visitor {
         } else {
             this.employeeCount++;
         }
+        
+        // このようにして，子に対してもvisitを実行させる．
+        entry.getChildren().forEach(child => child.accept(this));
     }
     
     getGroupCount(): number {

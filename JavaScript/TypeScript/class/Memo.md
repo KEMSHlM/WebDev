@@ -4,7 +4,7 @@
 例えば，GUIのボタンを作成する際に，ボタンのデザインをMac, WindowsなどのOSに合わせて作成したい.  
 そのときに，以下のようなクラス構成にすることができる．  
 
-<img src="./design-pattern-part2/abstract_factory/クラス図.png" width=300>
+<img src="./design-pattern-part2/abstract_factory/クラス図.png" width=500>
 
 #### メリット  
 - 具体的なクラスをクライアントから隠蔽する．  
@@ -21,7 +21,7 @@
 ## Strategy  
 複数のアルゴリズムを別個のクラスとして定義し，切り替えができるようにするパターン．
 
-<img src="./design-pattern-part2/strategy/クラス図.png" width=300>
+<img src="./design-pattern-part2/strategy/クラス図.png" width=500>
 
 #### メリット  
 - 実行時にオブジェクト内で使用されるアルゴリズムを切り替えることができる．  
@@ -33,7 +33,7 @@
 
 ## State
 
-<img src="./design-pattern-part2/state/クラス図.png" width=300>
+<img src="./design-pattern-part2/state/クラス図.png" width=500>
 
 #### 使い時  
 - 現状の状態に応じて異なる振る舞いをする場合に使用する．そして，その状態数が多い場合に使用する．  
@@ -55,9 +55,9 @@
 振る舞いに関するデザインパターンである．  
 クライアントからのリクエストを処理するオブジェクトを鎖のように繋げ，処理が可能なオブジェクトにリクエストを順に渡していくパターン.
 
-<img src="./design-pattern-part2/chain_of_responsibility/クラス図.png" width=300>
+<img src="./design-pattern-part2/chain_of_responsibility/クラス図.png" width=500>
 
-<img src="./design-pattern-part2/chain_of_responsibility/シーケンス図.png" width=300>
+<img src="./design-pattern-part2/chain_of_responsibility/シーケンス図.png" width=500>
 
 #### メリット  
 - リクエスト処理の順序を制御できる．  
@@ -71,7 +71,7 @@
 構造に対するデザインパターンである．  
 ツリー構造を持つオブジェクトに再帰的な処理を行えるようにするパターン.  
 
-<img src="./design-pattern-part2/composite/クラス図.png" width=300>
+<img src="./design-pattern-part2/composite/クラス図.png" width=500>
 
 #### メリット  
 - 複雑なツリー構造を簡単に扱うことができる．  
@@ -88,7 +88,7 @@
 継承を使わずに，オブジェクトに機能を追加する．  
 構造に対するでザインパターンである．  
 
-<img src="./design-pattern-part2/decorator/クラス図.png" width=300>
+<img src="./design-pattern-part2/decorator/クラス図.png" width=500>
 
 #### メリット  
 - 実行時の機能追加がようにできる．  
@@ -103,7 +103,7 @@
 目的のオブジェクトへのアクセスを制御し，目的のオブジェクトへリクエストが届く前後に別の処理を行うことができる．  
 構造に関するデザインパターンである．  
 例）プロキシサーバ  
-<img src="./design-pattern-part2/proxy/クラス図.png" width=300>
+<img src="./design-pattern-part2/proxy/クラス図.png" width=500>
 
 #### メリット  
 - オブジェクトへのアクセスが間接的になる．
@@ -117,7 +117,7 @@
 目的(何を行うのか)と手段(どうやって行うのか)を分離する．  
 構造に関するデザインパターンである．  
 
-<img src="./design-pattern-part2/bridge/クラス図.png" width=300>
+<img src="./design-pattern-part2/bridge/クラス図.png" width=500>
 
 #### メリット  
 - 機能の拡張と実装の修正が容易．
@@ -132,7 +132,7 @@
 インスタンス化されたオブジェクトを効率よく共有することで，生成されるオブジェクトやリソースの消費を抑えるパターン．  
 構造に関するデザインパターン．  
 
-<img src="./design-pattern-part3/flyweight/クラス図.png" width=300>
+<img src="./design-pattern-part3/flyweight/クラス図.png" width=500>
 
 #### メリット  
 - 生成されるオブジェクトのパターンの数を抑える．  
@@ -152,7 +152,7 @@
 振る舞いに関するデザインパターン.
 
 以下は，商品の追加通知．  
-<img src="./design-pattern-part3/observer/クラス図.png" width=300>
+<img src="./design-pattern-part3/observer/クラス図.png" width=500>
 上の図では，通知リストなるものをItemSubjectは保持することになる．  
 
 #### メリット  
@@ -175,7 +175,7 @@
 
 カプセル化(外部からの直接の操作を禁止し，内部メンバにアクセスするためのAPIを容易する．)を利用したパターン.  
 
-<img src="./design-pattern-part3/mediator/クラス図.png" width=300>　　
+<img src="./design-pattern-part3/mediator/クラス図.png" width=500>　　
 
 カプセル化によって，通信間のやり取りや関係性が隠蔽されている．  
 
@@ -194,7 +194,7 @@ Undoのような機能を実装する．
 振る舞いに関するデザインパターン．  
 
 ここで，Note PadがOriginatorに当たる．  
-<img src="./design-pattern-part3/memento/クラス図.png" width=300>　　
+<img src="./design-pattern-part3/memento/クラス図.png" width=500>　　
 
 「カプセル化の破壊」を防ぎつつ，内部状態の保存・復元ができる設計にする．  
 
@@ -218,7 +218,12 @@ Undoのような機能を実装する．
     
 - Elementの具体的な型とVisitorの具体的な型によって実行される処理が確定する．  
 
-<img src="./design-pattern-part3/visitor/クラス図.png" width=300>　　
+例えば，  
+データ構造の中に多くの要素が格納されており，その各要素に対して，何らかの処理をしたい．  
+データ構造の中に書いてしまうと，データ構造の数だけデータクラスを修正してやる必要がある．  
+このような問題をクリアすることができる．  
+
+<img src="./design-pattern-part3/visitor/クラス図.png" width=500>　　
 
 #### メリット  
 - データ構造と操作を分離し，共通な操作を一箇所にまとめることができる．  
@@ -226,3 +231,44 @@ Undoのような機能を実装する．
 
 #### デメリット
 - 新しいデータ構造を追加することは困難．  
+
+## Command  
+命令をメソッドではなく，独立したクラスとして表現するパターン．  
+- 「命令」を送る側と，「命令」を受け取る側を分離する．  
+- 「命令」クラスのインスタンスを切り替えることで様々な処理を実現することができる．  
+
+以下は，ファイル操作をキューにまとめて実行する例．  
+
+ポイントは，コマンドはFileのメンバー関数である．  
+そして，コマンドはQueueにてまとめて実行される．  
+
+<img src="./design-pattern-part3/command/クラス図.png" width=500>　　
+
+複数の命令をひとまとめに実行する場合に便利．  
+また，非同期処理などとも相性がいい．
+
+#### メリット  
+- 既存のコードを修正することがなく，命令の追加・拡張ができる．  
+- 命令の再利用が可能．  
+- 処理のキューイングが可能．  
+
+#### デメリット
+- 過剰設計に気を付ける．  
+
+
+## Interpreter
+構文の解析を行なって，その結果を利用して処理を行うパターン.    
+- 解析を行うための「規則」をクラスとして表現．  
+- 規則のツリー構造を扱うことができる．  
+例）構文木
+振る舞いに関するデザインパターン  
+
+<img src="./design-pattern-part3/interpreter/クラス図.png" width=500>　　
+
+正規表現，SQL解析，プログラミング言語開発などに用いられる．  
+
+#### メリット  
+- 既存のコードを修正することなく，規則の追加・拡張が可能．  
+
+#### デメリット
+- 過剰設計に気を付ける．  
