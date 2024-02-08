@@ -177,7 +177,54 @@ Featureモジュールは0以上必要．
 
     ok -> http://localhost:3000/items/123e4567-e89b-12d3-a456-426614174000  
 
+3. ORM(Object Relational Mapping)  
+    ORM(Object Relational Mapping)とは，オブジェクト思考の言語とRDBの**非互換なデータをマッピングする役割**を持つ．  
+    オブジェクト指向は，「**現実世界の物事に即したデータモデル**」
+    RDBは，「**検索などRDBとしての役割を果たすために最適化されたモデル**」
+    
+    - Migration
+        移行を意味する単語．DBにおけるマイグレーションとは, 「DBの変更内容をファイルに記録し，その内容を実行してDBのスキーマ(構造や構成)を更新していく手法のこと」.  
+        
+        テーブルの仕様が変わる都度，マイグレーションファイルを作成する．  
+        DBの変更履歴を管理するために，マイグレーションファイルはタイムスタンプを含むファイル名で保存される．  
 
+
+    #### メリット  
+    - SQLを書かなくてもDB操作ができる．  
+    - データの定義が一箇所ですむので，メンテナンス性が高まる．  
+    - データベースを抽象化できる（プログラマがSQLの方言などを気にしなくてよくなる．）
+
+    #### デメリット  
+    - ORMライブラリの操作を学ぶ必要がある．  
+    - パフォーマンスチューニングが難しい．  
+    
+    - TypeORM
+        TypeScriptで書かれたORMライブラリ．  
+        - Entity  
+            RDBのテーブルと対応するオブジェクト．  
+            @Entityデコレーターをつけたクラスとして定義する.
+            ```typescript
+            @Entity()
+            export class Item {
+                @PrimaryGeneratedColumn('uuid')
+                id: string;
+
+                @Column()
+                name: string;
+            }
+            ```
+
+        - Repository  
+            Entityを管理するためのオブジェクト  
+            EntityとRespositoryが1対1の関係となり，データベース操作を抽象化する．  
+            ```typescript
+            @EntityRepository(Item)
+            export class ItemRepository extends Repository<Item> {
+                findById(id: string) {
+                    return this.findById(id);
+                }
+            }
+            ```
 
 ## 備考
 - HTTPメソッド
