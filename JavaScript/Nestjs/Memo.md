@@ -23,11 +23,15 @@ Featureモジュールは0以上必要．
 
 1. Controller  
     クライアントからのリクエストを受け付け，クライアントにレスポンスを返す．  
-    また，ネットワーク上でデータを転送する際，その経路を導き出すことルーティングと呼ぶ．
+    また，ネットワーク上でデータを転送する際，その経路を導き出すことルーティングと呼ぶ．  
+    <img src=https://docs.nestjs.com/assets/Controllers_1.png width=500>
 
-    例えば，POST http://localhost:3000/AuthController/signup
+    例えば，以下の例では，  
+    POST http://localhost:3000/users
 
     - 定義方法  
+        通常，HTTPメソッドは，クラス（ハンドラー）にデコレータをつける．  
+
         ```typescript
         import { Controller } from "@nestjs/common";
         
@@ -41,7 +45,7 @@ Featureモジュールは0以上必要．
             } 
         }
         ```
-        ?? Postデコレータは予約語?
+        ?? Postデコレータは予約語? -> そう，HTTPメソッドデコレータと呼ぶ．
 
 2. Service
     ビジネスロジック(具体的な業務で扱う様々な実体を表現し，それらの関係や処理の方法，業務の流れを実装した部分)を実装する．  
