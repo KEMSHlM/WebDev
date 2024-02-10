@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ItemsModule } from './items/items.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [ItemsModule, TypeOrmModule.forRoot()],
