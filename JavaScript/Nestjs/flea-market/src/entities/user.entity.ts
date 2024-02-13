@@ -11,6 +11,7 @@ export class User {
   @Column({ unique: true })
   username: string;
 
+  // Exclude は，パスワードがシリアライズされないようにする．
   @Column()
   @Exclude({ toPlainOnly: true })
   password: string;

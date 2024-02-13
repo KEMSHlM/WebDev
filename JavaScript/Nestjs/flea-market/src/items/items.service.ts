@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { ItemStatus } from './item-status.enum';
 import { Item } from '../entities/item.entity';
 import { ItemRepository } from './item.repository';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class ItemsService {
@@ -20,19 +25,26 @@ export class ItemsService {
     return found;
   }
 
-  async create(createItemDto: CreateItemDto): Promise<Item> {
-    return await this.itemRepository.createItem(createItemDto);
+  async create(createItemDto: CreateItemDto, user: User): Promise<Item> {
+    return await this.itemRepository.createItem(createItemDto, user);
   }
 
-  async updateStatus(id: string): Promise<Item> {
+  async updateStatus(id: string, user: User): Promise<Item> {
     const item = await this.findById(id);
+    if (item.userId === user.id) {
+      throw new BadRequestException('You cant buy your own item');
+    }
     item.status = ItemStatus.SOLD_OUT;
     item.updatedAt = new Date().toISOString();
     await this.itemRepository.save(item);
     return item;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, user: User): Promise<void> {
+    const item = await this.findById(id);
+    if (item.userId !== user.id) {
+      throw new BadRequestException('You are not the owner of this item');
+    }
     await this.itemRepository.delete({ id });
   }
 }
