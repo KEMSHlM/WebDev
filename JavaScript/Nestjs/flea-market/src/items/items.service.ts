@@ -7,7 +7,7 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { ItemStatus } from './item-status.enum';
 import { Item } from '../entities/item.entity';
 import { ItemRepository } from './item.repository';
-import { User } from 'src/entities/user.entity';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class ItemsService {
