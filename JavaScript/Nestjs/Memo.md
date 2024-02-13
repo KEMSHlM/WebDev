@@ -273,7 +273,20 @@ Featureモジュールは0以上必要．
     要素ごとに，Base64エンコードされている．  
     3つの要素がドットで連結されている．
 
-    例えば，適当な
+    例えば，適当な例を以下に載せる．  
+    `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`
+    最初のドットで区切られるまでの部分はヘッダ，その次がエンコードされたペイロード，最後が署名(秘密鍵)．
+
+    #### 手順
+
+    1. JWTの取得．  
+       localからサーバに，Username/Passwordを送信．その後，サーバーはtokenを返す．
+
+    2. JWTの認証．  
+       localからサーバに，tokenを送信．その後，サーバーはtokenを認証する．
+
+    これによって，
+    署名による改ざんの確認，有効期限をつけることで，セキュアなtokenが発行可能，セッションと異なり，状態をサーバーで管理する必要がない，任意のデータをtokenに含めることができる．
 
 ## 備考
 
