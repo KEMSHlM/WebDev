@@ -241,6 +241,7 @@ Featureモジュールは0以上必要．
    - Repository  
       Entityを管理するためのオブジェクト  
       EntityとRespositoryが1対1の関係となり，データベース操作を抽象化する．
+
      ```typescript
      @EntityRepository(Item)
      export class ItemRepository extends Repository<Item> {
@@ -250,43 +251,67 @@ Featureモジュールは0以上必要．
      }
      ```
 
-- 認証と認可  
-  認証(Authentication)  
-  通信の相手が誰であるかを確認すること．
+   - Relarions  
+      リレーションとは，テーブル間の関係を表すもの．
+     リレーションを定義する．
 
-  - ユーザー作成機能やログイン機能を実装する必要がある．
-  - ハッシュ化，JWTの生成などが必要．
+     例えば，ItemとUserが1対1の関係になる場合，以下のように定義する．
 
-- 認可(Authorization)
-  とある条件に対して，リソースのアクセス権限を与えること．
+     ```typescript
+     @Entity()
+     export class Item {
+       @PrimaryGeneratedColumn("uuid")
+       id: string;
+       @Column()
+       name: string;
+       @OneToOne((type) => User, (user) => user.item)
+       user: User;
+     }
+     ```
 
-  - ロールによる認可処理を実装．
-  - Guards, カスタムデコレータ．
+- 認証と認可
 
-  - JWT  
-    三つの要素からなる．
+1. 認証(Authentication)  
+   通信の相手が誰であるかを確認すること．
 
-    - ヘッダ：ハッシュアルゴリズムの情報などのメタデータ．
-    - ペイロード：認証対象の情報で，ユーザ名やIDなど任意の情報．
-    - 署名：ヘッダとペイロードをエンコードしたものに秘密鍵を加えて，ハッシュ化したもの．
+- ユーザー作成機能やログイン機能を実装する必要がある．
+- ハッシュ化，JWTの生成などが必要．
 
-    要素ごとに，Base64エンコードされている．  
-    3つの要素がドットで連結されている．
+2. 認可(Authorization)
+   とある条件に対して，リソースのアクセス権限を与えること．
 
-    例えば，適当な例を以下に載せる．  
-    `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`
-    最初のドットで区切られるまでの部分はヘッダ，その次がエンコードされたペイロード，最後が署名(秘密鍵)．
+- ロールによる認可処理を実装．
+- Guards, カスタムデコレータ．
 
-    #### 手順
+- JWT  
+  三つの要素からなる．
 
-    1. JWTの取得．  
-       localからサーバに，Username/Passwordを送信．その後，サーバーはtokenを返す．
+  - ヘッダ：ハッシュアルゴリズムの情報などのメタデータ．
+  - ペイロード：認証対象の情報で，ユーザ名やIDなど任意の情報．
+  - 署名：ヘッダとペイロードをエンコードしたものに秘密鍵を加えて，ハッシュ化したもの．
 
-    2. JWTの認証．  
-       localからサーバに，tokenを送信．その後，サーバーはtokenを認証する．
+  要素ごとに，Base64エンコードされている．  
+  3つの要素がドットで連結されている．
 
-    これによって，
-    署名による改ざんの確認，有効期限をつけることで，セキュアなtokenが発行可能，セッションと異なり，状態をサーバーで管理する必要がない，任意のデータをtokenに含めることができる．
+  例えば，適当な例を以下に載せる．  
+  `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`
+  最初のドットで区切られるまでの部分はヘッダ，その次がエンコードされたペイロード，最後が署名(秘密鍵)．
+
+  [jwt.io](https://jwt.io) で生成されたTokenをデコードすることができる．  
+  ![decode](.img/screenshot_20240213_131900.png)
+
+  上の画像から，生成された時間(iat), 期限切れになる時間(exp)が確認できる．
+
+  #### 手順
+
+  1. JWTの取得．  
+     localからサーバに，Username/Passwordを送信．その後，サーバーはtokenを返す．
+
+  2. JWTの認証．  
+     localからサーバに，tokenを送信．その後，サーバーはtokenを認証する．
+
+  これによって，
+  署名による改ざんの確認，有効期限をつけることで，セキュアなtokenが発行可能，セッションと異なり，状態をサーバーで管理する必要がない，任意のデータをtokenに含めることができる．
 
 ## 備考
 
