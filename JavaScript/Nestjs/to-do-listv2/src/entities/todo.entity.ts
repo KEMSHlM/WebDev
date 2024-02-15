@@ -12,7 +12,11 @@ export class Todo {
   @Column()
   description: string;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: TodoStatus,
+    default: TodoStatus.PENDING,
+  })
   status: TodoStatus;
 
   @Column()
