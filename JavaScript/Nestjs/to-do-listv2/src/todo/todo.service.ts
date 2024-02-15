@@ -2,16 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from '../entities/todo.entity';
-import { TodoRepository } from './todo.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 // Injectableデコレーターは，クラスにメタデータを追加し，そのクラスをDIコンテナに登録する．
 // つまり，このクラスは，他のクラスからデコレータを用いてインスタンス化されることができる．
 @Injectable()
 export class TodoService {
-  constructor(private readonly todoRepository: TodoRepository) {}
+  constructor(
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
+  ) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    return await this.todoRepository.createTodo(createTodoDto);
+    const { title, description } = createTodoDto;
+    const todo = this.todoRepository.create({
+      title,
+      description,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    await this.todoRepository.save(todo);
+
+    return todo;
   }
 
   async findAll(): Promise<Todo[]> {
@@ -19,7 +33,7 @@ export class TodoService {
     return this.todoRepository.find();
   }
 
-  async findOne(id: string): Promise<Todo> {
+  async findById(id: string): Promise<Todo> {
     const todo = await this.todoRepository.findOne({
       where: {
         id: id,
@@ -32,8 +46,8 @@ export class TodoService {
   }
 
   async updateStatus(id: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
-    const todo = await this.findOne(id);
-    todo.status = updateTodoDto.status;
+    const todo = await this.findById(id);
+    todo.todoStatus = updateTodoDto.todoStatus;
     return todo;
   }
 }

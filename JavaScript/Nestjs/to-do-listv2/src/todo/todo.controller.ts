@@ -21,8 +21,8 @@ export class TodoController {
   // @Param に渡されたパラメーターをルートパラメータとして利用することができる．
   // 以下では，@Param は リクエストのパラメーターを取得するために使用している．．
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Todo> {
-    return await this.findOne(id);
+  async findById(@Param('id') id: string): Promise<Todo> {
+    return await this.findById(id);
   }
 
   @Patch(':id')

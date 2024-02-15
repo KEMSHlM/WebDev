@@ -17,7 +17,7 @@ export class Todo {
     enum: TodoStatus,
     default: TodoStatus.PENDING,
   })
-  status: TodoStatus;
+  todoStatus: TodoStatus;
 
   @Column()
   createdAt: string;
