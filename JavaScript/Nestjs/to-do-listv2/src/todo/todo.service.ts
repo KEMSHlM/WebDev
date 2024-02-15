@@ -1,44 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { Todo } from './interface/todo.interface';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { randomUUID } from 'crypto';
-import { TodoStatus } from './todo-status.enum';
+import { Todo } from '../entities/todo.entity';
+import { TodoRepository } from './todo.repository';
 
 // Injectableデコレーターは，クラスにメタデータを追加し，そのクラスをDIコンテナに登録する．
 // つまり，このクラスは，他のクラスからデコレータを用いてインスタンス化されることができる．
 @Injectable()
 export class TodoService {
-  constructor(private readonly todos: Todo[]) {}
+  constructor(private readonly todoRepository: TodoRepository) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const task: Todo = {
-      id: randomUUID(),
-      title: createTodoDto.title,
-      description: createTodoDto.description,
-      status: TodoStatus.PENDING,
-    };
-
-    this.todos.push(task);
-
-    return task;
+    return await this.todoRepository.createTodo(createTodoDto);
   }
 
   async findAll(): Promise<Todo[]> {
-    return this.todos;
+    // extendsしているので，もともとあるメソッドを使っている．
+    return this.todoRepository.find();
   }
 
   async findOne(id: string): Promise<Todo> {
-    return this.todos.find((todo) => todo.id === id);
+    const todo = await this.todoRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!todo) {
+      throw new Error(` ${id} is not found !`);
+    }
+    return todo;
   }
 
   async updateStatus(id: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
-    const index = this.todos.findIndex((todo) => todo.id === id);
-    if (index != -1) {
-      this.todos[index].status = updateTodoDto.status;
-      return this.todos[index];
-    } else {
-      throw new Error('Todo not Error');
-    }
+    const todo = await this.findOne(id);
+    todo.status = updateTodoDto.status;
+    return todo;
   }
 }
