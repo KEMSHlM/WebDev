@@ -5,6 +5,7 @@ import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entity';
+import { User } from './entities/user.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Todo } from './entities/todo.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [Todo],
+      entities: [Todo, User],
     }),
     AuthModule,
   ],

@@ -3,6 +3,7 @@ import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from '../entities/todo.entity';
+import { TodoStatus } from './todo-status.enum';
 
 @Controller('todos')
 export class TodoController {
@@ -23,6 +24,13 @@ export class TodoController {
   @Get(':id')
   async findById(@Param('id') id: string): Promise<Todo> {
     return await this.findById(id);
+  }
+
+  @Get(':todoStatus')
+  async findByStatus(
+    @Param('todoStatus') todoStatus: TodoStatus,
+  ): Promise<Todo[]> {
+    return await this.todoService.findByStatus(todoStatus);
   }
 
   @Patch(':id')

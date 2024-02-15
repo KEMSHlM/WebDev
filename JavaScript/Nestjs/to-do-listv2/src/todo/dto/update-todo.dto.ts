@@ -7,5 +7,5 @@ import { TodoStatus } from '../todo-status.enum';
 export class UpdateTodoDto {
   @IsString()
   @IsEnum(TodoStatus)
-  status: TodoStatus;
+  todoStatus: TodoStatus;
 }

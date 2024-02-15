@@ -4,6 +4,7 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from '../entities/todo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TodoStatus } from './todo-status.enum';
 
 // Injectableデコレーターは，クラスにメタデータを追加し，そのクラスをDIコンテナに登録する．
 // つまり，このクラスは，他のクラスからデコレータを用いてインスタンス化されることができる．
@@ -31,6 +32,15 @@ export class TodoService {
   async findAll(): Promise<Todo[]> {
     // extendsしているので，もともとあるメソッドを使っている．
     return this.todoRepository.find();
+  }
+
+  async findByStatus(todoStatus: TodoStatus): Promise<Todo[]> {
+    // extendsしているので，もともとあるメソッドを使っている．
+    return this.todoRepository.find({
+      where: {
+        todoStatus: todoStatus,
+      },
+    });
   }
 
   async findById(id: string): Promise<Todo> {
