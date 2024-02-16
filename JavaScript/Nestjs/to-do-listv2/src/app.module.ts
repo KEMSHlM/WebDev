@@ -7,8 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     TodoModule,
-    DatabaseModule,
     AuthModule,
+    DatabaseModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],
