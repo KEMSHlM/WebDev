@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 // 実体としてこのクラスが渡ってくる．
 // getメソッドのメンバーと名前が一致している．
@@ -12,4 +12,7 @@ export class CreateTodoDto {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  @IsDate()
+  deadline: string;
 }
