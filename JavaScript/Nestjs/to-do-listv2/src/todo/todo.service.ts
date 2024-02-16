@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from '../entities/todo.entity';
@@ -16,17 +16,7 @@ export class TodoService {
   ) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const { title, description } = createTodoDto;
-    const todo = this.todoRepository.create({
-      title,
-      description,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-
-    await this.todoRepository.save(todo);
-
-    return todo;
+    return await this.todoRepository.save(createTodoDto);
   }
 
   async findAll(): Promise<Todo[]> {
@@ -34,6 +24,7 @@ export class TodoService {
     return this.todoRepository.find();
   }
 
+  // ここは，throw new Errorしなくていいのか？
   async findByStatus(todoStatus: TodoStatus): Promise<Todo[]> {
     // extendsしているので，もともとあるメソッドを使っている．
     return this.todoRepository.find({
@@ -50,7 +41,7 @@ export class TodoService {
       },
     });
     if (!todo) {
-      throw new Error(` ${id} is not found !`);
+      throw new NotFoundException();
     }
     return todo;
   }

@@ -1,5 +1,11 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { TodoStatus } from 'src/todo/todo-status.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Todo {
@@ -19,9 +25,9 @@ export class Todo {
   })
   todoStatus: TodoStatus;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: string;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: string;
 }
