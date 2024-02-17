@@ -33,4 +33,10 @@ export class Todo {
 
   @Column()
   deadline: string;
+
+  @Column({
+    type: 'int',
+    default: 0,
+  })
+  priority: number;
 }

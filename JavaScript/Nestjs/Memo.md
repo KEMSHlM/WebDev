@@ -230,9 +230,9 @@ ORM(Object Relational Mapping)とは，オブジェクト思考の言語とRDB�
 RDBは，「**検索などRDBとしての役割を果たすために最適化されたモデル**」
 
 - Migration
-  移行を意味する単語．DBにおけるマイグレーションとは, 「DBの変更内容をファイルに記録し，その内容を実行してDBのスキーマ(構造や構成)を更新していく手法のこと」.
+  移行を意味する単語．DBにおけるマイグレーションとは, 「DBの変更内容をファイルに記録し，その内容を実行してDBのスキーマ(構造や構成)を更新していく手法のこと」.  
   テーブルの仕様が変わる都度，マイグレーションファイルを作成する．  
-   DBの変更履歴を管理するために，マイグレーションファイルはタイムスタンプを含むファイル名で保存される．
+  DBの変更履歴を管理するために，マイグレーションファイルはタイムスタンプを含むファイル名で保存される．
 
 ### メリット
 
@@ -245,9 +245,16 @@ RDBは，「**検索などRDBとしての役割を果たすために最適化さ
 - ORMライブラリの操作を学ぶ必要がある．
 - パフォーマンスチューニングが難しい．
 - TypeORM
-  TypeScriptで書かれたORMライブラリ．
+  TypeScriptで書かれたORMライブラリ．データベースの変更やマイグレーションを発行する．
+  TypeORMで，スキーマの更新を行う．その際に`synchronize = true`を選択したら自動でデータベースのスキーマが更新される．  
+  Migrationとは，データベースのスキーマを変更するツールではなく，そのスキーマの変更履歴を管理するためのツールである．  
+  そのため，Synchronizeはfalseにするべき．
 
-### 手順("@nestjs/typeorm": "^8.0.2", "typeorm": "^0.2.45")
+  以下にTypeORMのMigrationの手順を示す．
+
+### 手続き
+
+### 例(TypeORM: 0.2)
 
 ```shell
  docker-compose up -d
@@ -256,7 +263,7 @@ RDBは，「**検索などRDBとしての役割を果たすために最適化さ
  npm run start:dev
 ```
 
-### Entity
+#### Entity
 
 RDBのテーブルと対応するオブジェクト．  
  @Entityデコレーターをつけたクラスとして定義する.
@@ -272,7 +279,7 @@ export class Item {
 }
 ```
 
-### Repository
+#### Repository
 
 Entityを管理するためのオブジェクト  
  EntityとRespositoryが1対1の関係となり，データベース操作を抽象化する．
@@ -285,6 +292,19 @@ export class ItemRepository extends Repository<Item> {
   }
 }
 ```
+
+### 例(TypeORM: 0.3)
+
+```shell
+ docker-compose up -d
+ npx typeorm migration:generate -n CreateItem
+ npx typeorm migratino:run
+ npm run start:dev
+```
+
+#### Entity
+
+#### Repository
 
 ### Relarions
 
@@ -453,3 +473,11 @@ HTTPメソッドは，クライアントが行いたい処理をサーバに伝�
 CLUDは，create, read, update, deleteの頭文字をとったもの．  
  CLUDを実装することで，データベースを操作や管理を自在に行うことができるようになる.  
  また，データベースに限らず文脈内で使われるみたい．
+
+### 残る疑問たち
+
+- [x] Entityを変更した際に，Migrationを実行する前に，`$ npm run start:dev` したら，データベースの内容も変更されていた．これは，何故か．Migrationは，データベースを操作するSQLを発行するもので，これを実行しないとうまく行かないんじゃないのか？
+
+      これは，synchronizeオプションがtrueになっていたから．
+      また，migrationは，データベースのスキーマを変更するものではない．そのスキーマの変更履歴を管理するためにある．
+      それは，長期の開発でデータベースの変更などの要求に応えるためである. そのため，Synchronizeはfalseにするべき．
