@@ -1,6 +1,5 @@
 version: '3.7'
 services:
-
   postgres:
     image: postgres:14.2-alpine
     container_name: postgres
@@ -12,7 +11,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
       POSTGRES_DB: postgres
     hostname: postgres
     restart: always
@@ -30,3 +29,4 @@ services:
       - ./docker/pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
+

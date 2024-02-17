@@ -5,7 +5,7 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from '../entities/todo.entity';
 import { TodoStatus } from './todo-status.enum';
 
-@Controller('todos')
+@Controller('todo')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
