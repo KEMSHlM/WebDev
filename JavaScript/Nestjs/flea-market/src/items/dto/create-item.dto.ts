@@ -16,4 +16,3 @@ export class CreateItemDto {
   @IsNotEmpty()
   description: string;
 }
-

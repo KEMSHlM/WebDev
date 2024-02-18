@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { TodoStatus } from '../todo/todo-status.enum';
+import { User } from './user.entity';
 
 @Entity()
 export class Todo {
@@ -39,4 +41,7 @@ export class Todo {
     default: 0,
   })
   priority: number;
+
+  @ManyToOne(() => User, (user) => user.todo)
+  user: User;
 }

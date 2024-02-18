@@ -1,4 +1,4 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { TodoStatus } from '../todo-status.enum';
 
 // 実体としてこのクラスが渡ってくる．
@@ -7,5 +7,12 @@ import { TodoStatus } from '../todo-status.enum';
 export class UpdateTodoDto {
   @IsString()
   @IsEnum(TodoStatus)
-  todoStatus: TodoStatus;
+  @IsOptional()
+  todoStatus?: TodoStatus;
+
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  @IsOptional()
+  priority?: number;
 }

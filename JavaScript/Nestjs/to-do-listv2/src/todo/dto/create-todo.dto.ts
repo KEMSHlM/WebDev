@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
   Min,
 } from 'class-validator';
@@ -26,6 +27,7 @@ export class CreateTodoDto {
 
   @IsInt()
   @Min(0)
+  @Max(3)
   @IsOptional()
   priority?: number = 0;
 }

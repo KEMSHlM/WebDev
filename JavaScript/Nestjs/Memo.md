@@ -15,17 +15,23 @@
   - [ORM(Object Relational Mapping)](#ormobject-relational-mapping)
     - [メリット](#メリット)
     - [デメリット](#デメリット)
-    - [手順("@nestjs/typeorm": "^8.0.2", "typeorm": "^0.2.45")](#手順nestjstypeorm-802-typeorm-0245)
-    - [Entity](#entity)
-    - [Repository](#repository)
-    - [Relarions](#relarions)
+    - [TypeORM](#typeorm)
+      - [例(TypeORM: 0.3)](#例typeorm-03)
+        - [Entity](#entity)
+        - [Repository](#repository)
+      - [例(TypeORM: 0.2)](#例typeorm-02)
+        - [コマンド実行例](#コマンド実行例)
+        - [Repository](#repository)
+        - [Relarions](#relarions)
+    - [非同期](#非同期)
+    - [UP, DOWN](#up-down)
   - [認証と認可](#認証と認可)
     - [認証(Authentication)](#認証authentication)
     - [認可(Authorization)](#認可authorization)
       - [JWT](#jwt)
   - [Testの実装．](#testの実装)
     - [手順](#手順)
-  - [備考](#備考) - [HTTPメソッド](#httpメソッド) - [クラス図](#クラス図) - [CLUD](#clud)
+  - [備考](#備考) - [HTTPメソッド](#httpメソッド) - [クラス図](#クラス図) - [CLUD](#clud) - [残る疑問たち](#残る疑問たち)
   <!--toc:end-->
 
 ## 基本アーキテクチャ
@@ -244,29 +250,54 @@ RDBは，「**検索などRDBとしての役割を果たすために最適化さ
 
 - ORMライブラリの操作を学ぶ必要がある．
 - パフォーマンスチューニングが難しい．
-- TypeORM
-  TypeScriptで書かれたORMライブラリ．データベースの変更やマイグレーションを発行する．
-  TypeORMで，スキーマの更新を行う．その際に`synchronize = true`を選択したら自動でデータベースのスキーマが更新される．  
-  Migrationとは，データベースのスキーマを変更するツールではなく，そのスキーマの変更履歴を管理するためのツールである．  
-  そのため，Synchronizeはfalseにするべき．
 
-  以下にTypeORMのMigrationの手順を示す．
+### TypeORM
 
-### 手続き
+TypeScriptで書かれたORMライブラリ．データベースの変更やマイグレーションを発行する．
+TypeORMで，スキーマの更新を行う．その際に`synchronize = true`を選択したら自動でデータベースのスキーマが更新される．  
+Migrationとは，データベースのスキーマを変更することではなく，そのスキーマの変更履歴を管理するための一連の手続きである．  
+そのため，Synchronizeはfalseにするべき．
 
-### 例(TypeORM: 0.2)
+ここで，注意するのはTypeORMに限ったことなのか，わからないが  
+TypeORMでは最新のマイグレーションファイルとデータベースの状態に違いがあれば, Migrationファイルを作成可能になるわけではない．  
+Migrationファイルを生成する前に，データベースに最新の変更がされて，Entityとの差分がない場合，マイグレーションファイルは生成できない．
+
+(うまく自動生成にしてくれよ)
+
+以下にTypeORMのMigrationの手順を示す．
+
+#### 例(TypeORM: 0.3)
+
+以下は，データベースにtableを追加していない状態からスタートする．  
+最初に，Dockerを立ち上げる．
 
 ```shell
- docker-compose up -d
- npx typeorm migration:generate -n CreateItem
- npx typeorm migratino:run
- npm run start:dev
+docker-compose up -d
 ```
 
-#### Entity
+entityを作成したら，migrationファイルを発行する．
+
+```shell
+npm run typeorm-ts-node-commonjs migration:generate -- --dataSource src/database/data-source.ts --pretty src/migrations/todoPriority
+```
+
+データベースに変更を反映させる．
+
+````shell
+```shell
+npm run typeorm-ts-node-commonjs migration:run -d src/database/data-source.ts
+````
+
+サービスを立ち上げる．
+
+```shell
+npm run start:dev
+```
+
+##### Entity
 
 RDBのテーブルと対応するオブジェクト．  
- @Entityデコレーターをつけたクラスとして定義する.
+@Entityデコレーターをつけたクラスとして定義する.
 
 ```typescript
 @Entity()
@@ -279,7 +310,31 @@ export class Item {
 }
 ```
 
-#### Repository
+##### Repository
+
+```typescript
+@Injectable()
+export class TodoService {
+  constructor(
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
+  ) {}
+  /* ... */
+}
+```
+
+#### 例(TypeORM: 0.2)
+
+##### コマンド実行例
+
+```shell
+ docker-compose up -d
+ npx typeorm migration:generate -n CreateItem
+ npx typeorm migratino:run
+ npm run start:dev
+```
+
+##### Repository
 
 Entityを管理するためのオブジェクト  
  EntityとRespositoryが1対1の関係となり，データベース操作を抽象化する．
@@ -293,20 +348,7 @@ export class ItemRepository extends Repository<Item> {
 }
 ```
 
-### 例(TypeORM: 0.3)
-
-```shell
- docker-compose up -d
- npx typeorm migration:generate -n CreateItem
- npx typeorm migratino:run
- npm run start:dev
-```
-
-#### Entity
-
-#### Repository
-
-### Relarions
+##### Relarions
 
 リレーションとは，テーブル間の関係を表すもの．
 リレーションを定義する．
@@ -329,6 +371,39 @@ export class Item {
 
 forRootAsyncをメソッドを使用して，非同期にモジュールのオプションを渡す必要がある場合にこのforRootAsyncメソッドを使用する．  
 例えば，環境変数からの設定読み込み(APIなどの設定を隠蔽できる)や非同期API呼び出しによる設定の取得，動的に設定を生成するといった事例が当てはまる．
+
+### UP, DOWN
+
+upメソッドとdownメソッドは,データベースのスキーマ変更を管理するための重要な概念.
+
+- upメソッド
+  upメソッドは、マイグレーションを適用する際に実行される処理を定義します。これには、新しいテーブルの作成、既存のテーブルにカラムを追加する、インデックスを作成する、データ型を変更するなど、データベーススキーマに対する変更が含まれます。基本的にupメソッドはデータベーススキーマを新しいバージョンにアップグレードするために使用されます。
+
+- downメソッド
+  downメソッドは, upメソッドで行われた変更を元に戻す（ロールバックする）際に実行される処理を定義する.  
+  マイグレーションが誤っていたり, 問題が発生した場合に, データベーススキーマを以前の状態に戻すために使用する.  
+  downメソッドには, upメソッドで行われた変更を逆に適用する処理が記述される．
+
+```typescript
+export class CreateUsersTable1588102418410 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // ユーザーテーブルを作成する
+    await queryRunner.query(`
+            CREATE TABLE users (
+                id INT AUTO_INCREMENT,
+                name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                PRIMARY KEY (id)
+            )
+        `);
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // ユーザーテーブルを削除する
+    await queryRunner.query(`DROP TABLE users`);
+  }
+}
+```
 
 ## 認証と認可
 

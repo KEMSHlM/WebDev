@@ -18,6 +18,4 @@ const AppDataSource = new DataSource({
   migrations: ['src/migrations/**.ts'],
 });
 
-console.log(AppDataSource);
-
 export default AppDataSource;
