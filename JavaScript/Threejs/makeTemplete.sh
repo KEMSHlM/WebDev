@@ -1,6 +1,6 @@
 #!/bin/bash
 shellpath="$(dirname "$0")"
-dirpath="templete"
+dirpath="webpack-templete"
 
 if [ $# -ne 1 ]; then
 	echo "Usage: $0 <project name>" && exit
