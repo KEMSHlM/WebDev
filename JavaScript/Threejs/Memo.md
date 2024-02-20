@@ -396,6 +396,93 @@ near は，カメラからの最小描画距離，farは，カメラからの最
 
 #### OrthographicCamera クラス
 
+```js
+// Camera
+const aspectRatio = sizes.width / sizes.height;
+const camera = new THREE.OrthographicCamera(
+  -1 * aspectRatio,
+  1 * aspectRatio,
+  1,
+  -1,
+  0.1,
+  100,
+);
+```
+
+OrthographicCamera(orthographic projection: 正投影)は，透視投影とは異なり，平行投影を行う．  
+そのため，オブジェクトが等しい大きさで描画される．  
+2D描画などに適する．
+
+#### CameraControl
+
+以下は，カメラコントロールを自作する例．
+
+```js
+const tick = () => {
+  const elapsedTime = clock.getElapsedTime();
+
+  // Update objects
+  mesh.rotation.y = elapsedTime;
+
+  Update camera
+  camera.position.x = 3.0 * Math.sin(cursor.x * Math.PI * 2);
+  camera.position.z = 3.0 * Math.cos(cursor.x * Math.PI * 2);
+  camera.position.y = cursor.y * 5;
+  camera.lookAt(mesh.position);
+
+  // Render
+  renderer.render(scene, camera);
+
+  // Call tick again on the next frame
+  window.requestAnimationFrame(tick);
+};
+
+tick();
+```
+
+通常，カメラコントロールは以下のようなライブラリを使うことが多い．
+
+```js
+const controls = new OrbitControls(camera, canvas);
+```
+
+### フルスクリーン表示
+
+```js
+window.addEventListener("resize", () => {
+  // Update sizes
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  // Update camera
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  // Update renderer
+  renderer.setSize(sizes.width, sizes.height);
+  // pixel ratio が変更された時にも，対応．
+  renderer.setPixelRatio(window.devicePixelRatio);
+});
+
+window.addEventListener("dblclick", () => {
+  const fullscreenElement =
+    document.fullscreenElement || document.fullscreenElement;
+  if (!fullscreenElement) {
+    if (canvas.requestFullscreen) {
+      canvas.requestFullscreen();
+    } else if (canvas.webkitRequestFullscreen) {
+      canvas.requestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+});
+```
+
 ### レンダラー
 
 レンダリングとは，3D空間に存在するオブジェクトを2D画像に変換することであり，その処理を行うのがレンダラーである．
