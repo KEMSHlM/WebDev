@@ -3,11 +3,10 @@
 ## OVERVIEW
 
 <!--toc:start-->
-
 - [ThreeJS 入門](#threejs-入門)
   - [OVERVIEW](#overview)
-  - [基礎知識](#基礎知識)
-    - [オブジェクト](#オブジェクト)
+  - [1. 基礎知識](#1-基礎知識)
+    - [1.1 オブジェクト](#11-オブジェクト)
       - [オブジェクトの回転](#オブジェクトの回転)
         - [オイラー角による回転](#オイラー角による回転)
           - [ジンバルロック](#ジンバルロック)
@@ -18,29 +17,41 @@
           - [クォータニオンによる回転操作](#クォータニオンによる回転操作)
           - [複素数の拡張としてのクォータニオン](#複素数の拡張としてのクォータニオン)
           - [クォータニオンの利点](#クォータニオンの利点)
-    - [レンダラー](#レンダラー)
-    - [シーン](#シーン)
-    - [マテリアル](#マテリアル)
-    - [光源](#光源)
+    - [1.2 Animation](#12-animation)
+    - [1.3 カメラ](#13-カメラ)
+      - [PerspectiveCamera クラス](#perspectivecamera-クラス)
+      - [OrthographicCamera クラス](#orthographiccamera-クラス)
+      - [CameraControl](#cameracontrol)
+    - [1.4 フルスクリーン表示](#14-フルスクリーン表示)
+    - [1.5 Debug UI](#15-debug-ui)
+    - [1.6 Geometry](#16-geometry)
+    - [1.7 Texture](#17-texture)
+      - [PBR(Physically Based Rendering)](#pbrphysically-based-rendering)
+      - [UV unwrapping](#uv-unwrapping)
+        - [面(Face)の定義](#面faceの定義)
+    - [1.8 レンダラー](#18-レンダラー)
+    - [1.9 シーン](#19-シーン)
+    - [1.10 マテリアル](#110-マテリアル)
+    - [1.11 光源](#111-光源)
       - [AmbientLight クラス](#ambientlight-クラス)
       - [DirectionalLight クラス](#directionallight-クラス)
       - [HemisphereLight クラス](#hemispherelight-クラス)
       - [PointLight クラス](#pointlight-クラス)
       - [SpotLight クラス](#spotlight-クラス)
-    - [Material](#material)
+    - [1.12 Material](#112-material)
       - [MeshBasicMaterial クラス](#meshbasicmaterial-クラス)
       - [MeshNormalMaterial クラス](#meshnormalmaterial-クラス)
       - [MeshLambertMaterial クラス](#meshlambertmaterial-クラス)
       - [MeshPhongMaterial クラス](#meshphongmaterial-クラス)
       - [MeshToonMaterial クラス](#meshtoonmaterial-クラス)
       - [MeshStandardMaterial クラス](#meshstandardmaterial-クラス)
-    - [Raycast](#raycast)
-  - [基本構造](#基本構造)
-  <!--toc:end-->
+    - [1.13 Raycast](#113-raycast)
+  - [2. 基本構造](#2-基本構造)
+<!--toc:end-->
 
-## 基礎知識
+## 1. 基礎知識
 
-### オブジェクト
+### 1.1 オブジェクト
 
 以下のコマンド．オブジェクトを生成する，
 
@@ -78,7 +89,7 @@ mesh.rotation.reorder("YXZ");
 mesh.rotation.set(Math.PI * 0.25, Math.PI * 0.25, 0);
 ```
 
-#### オブジェクトの回転
+####  オブジェクトの回転
 
 回転を数学的に表現する上で, オイラー角,回転行列とクォータニオンがある．
 
@@ -344,7 +355,7 @@ $i^2 = j^2 = k^2 = ijk = -1$のルールが定まれば，以下のような表�
 - 回転お連続的変化で補間計算が容易．
 - 結合法則が成り立ち，複数の回転の操作でも扱いやすい．
 
-### Animation
+### 1.2 Animation
 
 Animationを行うためには，以下のようなコードをかく．  
 時間による描画を正しく行いたい場合は，以下のように書く．
@@ -376,7 +387,7 @@ gsap.to(mesh.position, { duration: 1, delay: 1, x: 2 });
 gsap.to(mesh.position, { duration: 1, delay: 2, x: 0 });
 ```
 
-### カメラ
+### 1.3 カメラ
 
 #### PerspectiveCamera クラス
 
@@ -446,7 +457,7 @@ tick();
 const controls = new OrbitControls(camera, canvas);
 ```
 
-### フルスクリーン表示
+### 1.4 フルスクリーン表示
 
 ```js
 window.addEventListener("resize", () => {
@@ -483,22 +494,217 @@ window.addEventListener("dblclick", () => {
 });
 ```
 
-### レンダラー
+### 1.5 Debug UI
+
+以下のように，デバッグUIを簡単に作成することができる．
+色関連の設定がよくわかってないところがあるが，色コードは関数によって異なる?? それに注意するべき．
+
+```js
+/**
+ * Debug
+ */
+const gui = new GUI({
+  width: 300,
+  title: "Nice debug UI",
+  closeFolders: true,
+});
+// gui.close()
+
+window.addEventListener("keydown", (event) => {
+  if (event.key == "h") {
+    gui.show(gui._hidden);
+  }
+});
+
+const debugObject = {};
+
+/**
+
+...
+
+ */
+
+/**
+ * Object
+ */
+debugObject.color = "#9d69b5";
+
+const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+const material = new THREE.MeshBasicMaterial({
+  color: debugObject.color,
+  wireframe: true,
+});
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+
+const cubeTweaks = gui.addFolder("Awesome cube");
+// cubeTweaks.close();
+
+cubeTweaks.add(mesh.position, "y").min(-3).max(3).step(0.01).name("elevation");
+cubeTweaks.add(mesh, "visible");
+cubeTweaks.add(mesh.material, "wireframe");
+
+// onChange で欲しい色コードを取得できる．
+// また，色コードは，関数によって異なることがあるので，使用には注意．
+cubeTweaks.addColor(debugObject, "color").onChange(() => {
+  material.color.set(debugObject.color);
+});
+
+debugObject.spin = () => {
+  gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI * 2 });
+};
+cubeTweaks.add(debugObject, "spin");
+
+cubeTweaks.add(geometry, "widthSegments");
+
+debugObject.subdivision = 2;
+cubeTweaks
+  .add(debugObject, "subdivision")
+  .min(1)
+  .max(20)
+  .step(1)
+  .onFinishChange(() => {
+    mesh.geometry.dispose(); // これがないと，メモリリークが発生する．
+    mesh.geometry = new THREE.BoxGeometry(
+      1,
+      1,
+      1,
+      debugObject.subdivision,
+      debugObject.subdivision,
+      debugObject.subdivision,
+    );
+  });
+
+const myObject = {
+  myVariable: 1337,
+};
+cubeTweaks.add(myObject, "myVariable");
+```
+
+<img src=".img/screenshot_20240221_133617.png" width=500>
+
+### 1.6 Geometry
+
+以下は，ジオメトリの作成例である．
+
+```js
+const geometry = new THREE.BufferGeometry();
+
+const count = 5;
+const positionsArray = new Float32Array(count * 3 * 3);
+
+for (let i = 0; i < count * 3 * 3; i++) {
+  positionsArray[i] = (Math.random() - 0.5) * 4;
+}
+
+const postionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
+geometry.setAttribute("position", postionsAttribute);
+
+const material = new THREE.MeshBasicMaterial({
+  color: 0xff0000,
+  wireframe: true,
+});
+```
+
+<img src=".img/screenshot_20240221_062649.png" width=500>
+
+三角形の集合を描画することができた．
+
+### 1.7 Texture
+
+
+
+#### PBR(Physically Based Rendering)
+PBRマテリアルとは，Physically Based Renderingの略で，物理ベースレンダリングを実現するためのマテリアルを指す．  
+光の挙動を実際の物理法則に従って，シミュレーションする．  
+
+以下は，テクスチャ配信サイト
+> oliigon.com  
+> 3dtextures.me  
+> arroway-textures.ch  
+> https://polyhaven.com/textures
+
+<img src="https://moderno-pers.com/post/wp-content/uploads/2024/02/flooring_ref_a-800x401.jpg" width=500>
+
+#### UV unwrapping
+
+3Dモデルの表面を2D平面に展開するプロセスのことをUV unwrappingと呼ぶ．  
+複雑な形状の場合，3Dソフトウェアを使用するのが一般的．  
+
+以下は，UV unwrappingのイメージ．  
+
+<img src="https://threejs-journey.com/assets/lessons/11/009.png" width=500>
+
+##### 面(Face)の定義
+テクスチャの定義を理解するには，まず面の定義方法を知る必要がある．  
+3Dレンダリングにおける，六面体の各面は２つの三角形の組み合わせによって表現されている．  
+
+Three.jsでは，頂点の座標はGeometryオブジェクトのfacesという配列で定義される．  
+faces配列は，1個の三角形毎に半時計周りに定義すると紙面上向きが正面であると見なされる(右ねじの法則)．  
+<img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F102207%2Fb999e4d2-9866-5ac5-4e17-cfbe01f77301.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=a4c241bb75cd1a34b6290c0d22196290" width=500>
+
+上図は，一例であり開始する頂点はどれでも構わなない．
+
+##### テクスチャの収集
+3Dでは，テクスチャの配置を定義することをUVマッピングと呼ぶ．  
+つまり，一つの面に対して複数のテクスチャを貼り付ける場合，UVマッピングが必要．  
+UVとはテクスチャを2次元とした場合に，U，V軸で定義することに由来する．(さらに，高さを定義したUVWマッピングも存在する)  
+
+<img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F102207%2Fb07677c9-1147-1a67-1481-7ba5c42534d2.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=e843a8907281a8b564d42d4e043bb4ef" width=500>
+
+下図でいうと，右方向がU軸正の向き，上方向がV正の向き. また，原点は左下となる．  
+
+<img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F102207%2F87ea850a-3bc6-8ec7-5d39-4c591c90679b.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=6a2193aa42d99b3095bda47c464515c6" width=500>
+
+?? 疑問なのは，立方体のテクスチャを設定した際に，
+
+##### テクスチャ描画の最適化
+
+###### Mipmapping
+Mipmappingとは，1x1のテクスチャになるまで，テクスチャの半分の小さいバージョンを何度も生成する技術．  
+filterとは，Mipmappingする際に複数のピクセルを平均化などの処理をかけることをいう．  
+
+Threejsには，二つのフィルタリング操作を標準搭載している．  
+
+- Minification filter
+  Minification fileter(最小化フィルタ)は，テクスチャのピクセルがレンダリングのピクセルより小さい時に機能する．  
+  通常は，`THREE.LinearMipmapLinearFilter`が適用されている．  
+
+- Magnification filter
+  Magnification filter(最大化フィルタ)は，テクスチャのピクセルがレンダリングのピクセルよりも大きい場合に機能する．つまりテクスチャが覆う面に対して小さすぎる場合.
+  
+  例えば，以下の例では，
+  <img src="https://threejs-journey.com/assets/lessons/11/021.png" width=500>
+  
+  デフォルトは，`THREE.LinearFilter`が適用されているが，`THREE.NearestFilter`を適用することで，上記の問題を解決できる．  
+  <img src="https://threejs-journey.com/assets/lessons/11/022.png" width=500>
+
+##### 画像データの選択
+
+画像データはなるべく軽くしてやる必要がある．  
+pngファイルは，圧縮が比較的弱め，高画質だがファイル自体は重め．  
+jpegファイルは，圧縮が強め，低画質，低容量．  
+
+
+> [TinyPNG: 画像圧縮サイト](https://tinypng.com/)
+
+
+### 1.8 レンダラー
 
 レンダリングとは，3D空間に存在するオブジェクトを2D画像に変換することであり，その処理を行うのがレンダラーである．
 
 <img src="https://cdn-ak.f.st-hatena.com/images/fotolife/o/optim-tech/20230719/20230719102200.png" width="500">
 
-### シーン
+### 1.9 シーン
 
 シーンとは，3D空間に存在するオブジェクトを配置するための箱のようなものである．
 
-### マテリアル
+### 1.10 マテリアル
 
 マテリアルとは，オブジェクトの見た目を決めるためのものである．
 質感や色などを指定することができる．
 
-### 光源
+### 1.11 光源
 
 #### AmbientLight クラス
 
@@ -567,7 +773,7 @@ scene.add(light);
 
 <img src="https://ics.media/_assets/tutorial-three/light_spot__1440.png" width="500">
 
-### Material
+### 1.12 Material
 
 #### MeshBasicMaterial クラス
 
@@ -666,12 +872,12 @@ const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 ```
 
-### Raycast
+### 1.13 Raycast
 
 raycastとは，光線を発射してその光線が当たったオブジェクトを取得することである．
 当たり判定などの処理に利用される．
 
-## 基本構造
+## 2. 基本構造
 
 - THREE.Scene クラス
   3D空間を作成するためのクラス．３Dオブジェクトはシーンにadd()メソッドを利用して追加することができる．
