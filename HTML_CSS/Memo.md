@@ -1,5 +1,24 @@
 # HTML 入門
 
+<!--toc:start-->
+
+- [HTML 入門](#html-入門)
+  - [OVERVIEW](#overview)
+  - [HTMLとは](#htmlとは)
+  - [タグの基礎知識](#タグの基礎知識)
+  - [HTMLの属性](#htmlの属性)
+  - [HTMLのバージョンとDOCTYPE宣言](#htmlのバージョンとdoctype宣言)
+  - [HTML基本構成](#html基本構成)
+  - [body](#body)
+  - [HTML構成要素](#html構成要素)
+    - [基本的な要素](#基本的な要素)
+    - [空要素](#空要素)
+    - [属性](#属性)
+      - [論理属性](#論理属性)
+    - [HTMLにCSSとJavaScriptを追加する．](#htmlにcssとjavascriptを追加する)
+  - [HTMLの基礎](#htmlの基礎)
+  <!--toc:end-->
+
 HTML学習記録.
 
 ## OVERVIEW
@@ -179,3 +198,86 @@ HTML5からDOCTYPE宣言は，不要になった．
 
 属性は，実際のコンテンツの中で表示させたくない，要素に関する追加情報を保有する．  
 この例は，`class`属性は要素をスタイル情報の対象とするために使用される識別子である．
+
+属性をつけることで，リンクを載せることができる．  
+以下の`<a>`がそのanchor要素である．
+
+```html
+<p>
+  A link to my
+  <a
+    herf="https://www.mozilla.org/"
+    title="The Mozilla homepage"
+    target="_blank"
+    >favorite website</a
+  >.
+</p>
+```
+
+#### 論理属性
+
+沢山のHTMLソースをみていくうちに，属性値のない属性を見かけることがある．
+
+```html
+<input type="text" disabled />
+```
+
+これは，input要素にユーザが入力できないようにするためのdisabled属性がある ．
+
+### HTMLにCSSとJavaScriptを追加する．
+
+`<link>`要素は，外部のCSSファイルをHTMLページにリンクするために使用される．各場所は，`<head>`要素内に配置される．
+
+```html
+<link rel="stylesheet" href="my-css-file.css" />
+```
+
+`<script>`要素もヘッド部に入れるべきである．`defer`属性を指定してやると，ページのHTMLの解析が完了した後にJavaScriptを読み込む.
+
+## HTMLの基礎
+
+### 見出しと段落
+
+段落は，`<p>`要素で作成する．  
+見出しは，`<h1>`から`<h6>`までの要素で作成する．  
+h1が最も大きく，h6が最も小さい．
+
+例とて，物語を考える．`<h1>`は物語の題名を表し，`<h2>`は章の題名を表し，`<h3>`は節の題名を表す．
+
+**注意**
+
+- できれば，1ページに1つの`<h1>`を使用するのが望ましい．
+- `<h2>`より先に`<h3>`要素を使用するのはよくない．
+- 理想は，`<h3>`までのレベルにする．
+
+**考慮すべき点**
+
+- 検索エンジンは，見出しのコンテンツをページの検索ランクに影響する重要なキーワードとして扱うから，見出しがないとSEO(検索エンジンの最適化)の点でよくない．
+- CSSでコンテンツをスタイリングしたり，JavaScriptでコンテンツを操作する際に，見出し要素を使用することが多い．
+
+### リスト
+
+以下のように，`<ul>`で囲み`<li>`(list item)で囲むことで，**順序なしリスト**を作ることができる．
+
+```html
+<ul>
+  <li>milk</li>
+  <li>eggs</li>
+  <li>bread</li>
+  <li>hummus</li>
+</ul>
+```
+
+以下のように，`<ol>`で囲み`<li>`(list item)で囲むことで，**順序ありリスト**を作ることができる．
+
+```html
+<ol>
+  <li>Drive to the end of the road</li>
+  <li>Turn right</li>
+  <li>Go straight across the first two roundabouts</li>
+  <li>Turn left at the third roundabout</li>
+  <li>The school is on your right, 300 meters up the road</li>
+</ol>
+```
+
+### 強調と重要性
