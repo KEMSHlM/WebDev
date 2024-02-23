@@ -17,6 +17,15 @@
       - [論理属性](#論理属性)
     - [HTMLにCSSとJavaScriptを追加する．](#htmlにcssとjavascriptを追加する)
   - [HTMLの基礎](#htmlの基礎)
+    - [見出しと段落](#見出しと段落)
+    - [リスト](#リスト)
+    - [強調と重要性](#強調と重要性)
+  - [ハイパーリンク](#ハイパーリンク)
+    - [文章フラグメント](#文章フラグメント)
+    - [リンクに関する良い習慣](#リンクに関する良い習慣)
+      - [ダウンロードへのリンクをdownload属性を使う](#ダウンロードへのリンクをdownload属性を使う)
+      - [メールのリンク](#メールのリンク)
+  - [引用](#引用) - [ブロック引用](#ブロック引用)
   <!--toc:end-->
 
 HTML学習記録.
@@ -281,3 +290,216 @@ h1が最も大きく，h6が最も小さい．
 ```
 
 ### 強調と重要性
+
+強調を表す`<em>`要素と，重要性を表す`<strong>`要素がある．
+
+## ハイパーリンク
+
+webをwebたらしめる機能．  
+ブロックレベル要素を含む，ほぼ全てのコンテンツをリンクにすることができる．
+
+以下は，見出しがリンクになるパターン．
+
+```html
+<a herf="https://developer.mozilla.org/ja/">
+  <h1>MDN Web Docs</h1>
+</a>
+<p>2005年から，CSS,HTML，JavaScriptなどのウェブ技術を文章化している．</p>
+```
+
+タイトル属性による補足情報の追加もできる．
+
+```html
+<p>
+  <a
+    href="https://www.mozilla.org/ja/"
+    title="Mozilla の使命と協力方法について調べる最適な場所"
+  >
+    Mozilla ホームページ</a
+  >へのリンクを作成しています。
+</p>
+```
+
+### 文章フラグメント
+
+文章フラグメントとは，ページ内の特定の場所に直接リンクするためのものである．
+
+```html
+<!-- 文章のフラグメントを指定する． -->
+<h2 id="Mailing_address">Mailing address</h2>
+<!-- 文章のフラグメントにアクセスする． -->
+<p>
+  Want to write us a letter? Use our
+  <a href="contacts.html#Mailing_address">mailing address</a>.
+</p>
+```
+
+### リンクに関する良い習慣
+
+#### ダウンロードへのリンクをdownload属性を使う
+
+ダウンロード属性を使用して，規定の保存ファイル名を指定できる．
+
+```html
+<a
+  href="https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"
+  download="firefox-latest-64bit-installer.exe"
+>
+  Download Latest Firefox for Windows (64-bit) (English, US)
+</a>
+```
+
+#### メールのリンク
+
+以下は，宛先を指定した空のメールを作成する．
+
+```html
+<a href="mailto:nowhere@mozilla.org">メールをどこにも送信しません</a>
+```
+
+- `mailtto:nowhere@mozilla.org`
+- `mailtto:nowhere@mozilla.org?cc=nobody@mozilla.org`
+
+## 他のテキスト整形
+
+ブラウザが認識するためのルール的なものが多い．
+
+### 引用
+
+HTMLには，引用をマークアップするための機能もある．  
+どちらの要素を使用するかは，ブロックとインラインのどちらの引用をマークアップするかによって異なる．  
+先ほどのリンクは，内部リンクで今からは外部リンク??
+
+#### ブロック引用
+
+以下は，ブロック引用を利用する手順．
+
+```html
+<p>こちらが引用です。</p>
+<blockquote
+  cite="https://developer.mozilla.org/ja/docs/Web/HTML/Element/blockquote"
+>
+  <p>
+    The <strong>HTML <code>&lt;blockquote&gt;</code> Element</strong> (or
+    <em>HTML Block Quotation Element</em>) indicates that the enclosed text is
+    an extended quotation.
+  </p>
+</blockquote>
+```
+
+**引用する際のルール**
+ブロックレベルの内容の一部が他の場所から引用されている場合，`<blockquote>`要素で囲み，`cite`属性の中に引用元を指すURLを記載する必要がある．
+
+#### インライン引用
+
+インライン引用の際は，`<q>`要素を使用する．
+
+```html
+<p>
+  The quote element — <code>&lt;q&gt;</code> — is
+  <q cite="https://developer.mozilla.org/ja/docs/Web/HTML/Element/q">
+    intended for short quotations that don't require paragraph breaks.
+  </q>
+</p>
+```
+
+### 略語
+
+略語を定義する際には，`<abbr>`要素を使用する．
+
+```html
+<p>
+  We use <abbr>HTML</abbr>, Hypertext Markup Language, to structure our web
+  documents.
+</p>
+
+<p>
+  I think <abbr title="Reverend">Rev.</abbr> Green did it in the kitchen with
+  the chainsaw.
+</p>
+```
+
+### 詳細な連絡先のマークアップ
+
+```html
+<address>
+  <p>
+    Chris Mills<br />
+    Manchester<br />
+    The Grim North<br />
+    UK
+  </p>
+
+  <ul>
+    <li>Tel: 01234 567 890</li>
+    <li>Email: me@grim-north.co.uk</li>
+  </ul>
+</address>
+```
+
+### コンピュータのコードを表現する．
+
+htmlを使用して，コンピュータのコードをマークアップするために利用可能な要素がいくつかある．
+
+- `<code>`: コンピュータのコードの一般的な部分をマークアップ.
+- `<pre>`: 空白を保持する場合（一般的にはコードブロック）  
+  テキストの中でインデントや余分な空白を使用すると、ブラウザーはそれを無視するので, レンダリングされたページにはそれが表示されない．しかし, テキストを `<pre></pre>` タグで囲むと, エディターで見たのと同じように空白が表示されるようになる.
+- `<var>`: 特に変数名をマークアップするためのもの.
+- `<kbd>`: コンピューターに入力されたキーボード（およびその他の種類の）入力をマークアップするためのもの．
+- `<samp>`: コンピュータプログラムの出力をマークアップ.
+
+```html
+<pre><code>const para = document.querySelector('p');
+
+para.onclick = function() {
+  alert('Owww, stop poking me!');
+}</code></pre>
+
+<p>
+  You shouldn't use presentational elements like <code>&lt;font&gt;</code> and
+  <code>&lt;center&gt;</code>.
+</p>
+
+<p>
+  In the above JavaScript example, <var>para</var> represents a paragraph
+  element.
+</p>
+
+<p>Select all the text with <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>A</kbd>.</p>
+
+<pre>$ <kbd>ping mozilla.org</kbd>
+<samp>PING mozilla.org (63.245.215.20): 56 data bytes
+64 bytes from 63.245.215.20: icmp_seq=0 ttl=40 time=158.233 ms</samp></pre>
+```
+
+Qiitaとかは，これ使ってるのかな??
+
+### 日付と時刻をマークアップ
+
+日付をブラウザなどが認識するための要素．  
+日付の書き方は様々なので，以下の要素でマークアップすることができる．
+
+```html
+<!-- Standard simple date -->
+<time datetime="2016-01-20">20 January 2016</time>
+<!-- Just year and month -->
+<time datetime="2016-01">January 2016</time>
+<!-- Just month and day -->
+<time datetime="01-20">20 January</time>
+<!-- Just time, hours and minutes -->
+<time datetime="19:30">19:30</time>
+<!-- You can do seconds and milliseconds too! -->
+<time datetime="19:30:01.856">19:30:01.856</time>
+<!-- Date and time -->
+<time datetime="2016-01-20T19:30">7.30pm, 20 January 2016</time>
+<!-- Date and time with timezone offset -->
+<time datetime="2016-01-20T19:30+01:00">
+  7.30pm, 20 January 2016 is 8.30pm in France
+</time>
+<!-- Calling out a specific week number -->
+<time datetime="2016-W04">The fourth week of 2016</time>
+```
+
+## 文章とウェブサイトの構造
+
+### 文章の基本構造
