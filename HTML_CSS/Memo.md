@@ -1,7 +1,12 @@
-# HTML 入門
+<link href="https://raw.githubusercontent.com/simonlc/Markdown-CSS/master/markdown.css" rel="stylesheet"></link>
+
+# ALL OVERVIEW
+
+以下は，HTMLとCSSの学習記録.
 
 <!--toc:start-->
 
+- [ALL OVERVIEW](#all-overview)
 - [HTML 入門](#html-入門)
   - [OVERVIEW](#overview)
   - [HTMLとは](#htmlとは)
@@ -25,8 +30,47 @@
     - [リンクに関する良い習慣](#リンクに関する良い習慣)
       - [ダウンロードへのリンクをdownload属性を使う](#ダウンロードへのリンクをdownload属性を使う)
       - [メールのリンク](#メールのリンク)
-  - [引用](#引用) - [ブロック引用](#ブロック引用)
-  <!--toc:end-->
+  - [他のテキスト整形](#他のテキスト整形)
+    - [引用](#引用)
+      - [ブロック引用](#ブロック引用)
+      - [インライン引用](#インライン引用)
+    - [略語](#略語)
+    - [詳細な連絡先のマークアップ](#詳細な連絡先のマークアップ)
+    - [コンピュータのコードを表現する．](#コンピュータのコードを表現する)
+    - [日付と時刻をマークアップ](#日付と時刻をマークアップ)
+  - [文章とウェブサイトの構造](#文章とウェブサイトの構造)
+    - [文章の基本構造](#文章の基本構造)
+    - [HTMLレイアウト要素の詳細](#htmlレイアウト要素の詳細)
+    - [非意味的要素](#非意味的要素)
+    - [改行と水平線](#改行と水平線)
+  - [マルチメディアの埋め込み](#マルチメディアの埋め込み)
+    - [画像の埋め込み](#画像の埋め込み)
+      - [レスポンシブ画像](#レスポンシブ画像)
+    - [動画の埋め込み](#動画の埋め込み)
+      - [`<video>`要素](#video要素)
+      - [`<iframe>`要素](#iframe要素)
+    - [その他埋め込み技術](#その他埋め込み技術)
+      - [`<embed>`要素と`<object>`要素](#embed要素とobject要素)
+      - [ベクターグラフィック](#ベクターグラフィック)
+      - [HTMLテーブル](#htmlテーブル)
+- [CSS 入門](#css-入門)
+  - [CSSとは何か？](#cssとは何か)
+  - [CSSの基礎](#cssの基礎)
+    - [特定の要素をスタイリングする](#特定の要素をスタイリングする)
+    - [文章の場所に基づいてスタイリングする](#文章の場所に基づいてスタイリングする)
+    - [状態に基づいてスタイリングする](#状態に基づいてスタイリングする)
+  - [CSSの構造](#cssの構造)
+    - [セレクター](#セレクター)
+    - [詳細度](#詳細度)
+    - [プロパティと値](#プロパティと値)
+    - [関数](#関数)
+    - [アットルール](#アットルール)
+    - [一括指定](#一括指定)
+  - [CSSによるスタイリングおよびレンダリングまでの一連の流れ](#cssによるスタイリングおよびレンダリングまでの一連の流れ)
+    - [DOM について](#dom-について)
+    <!--toc:end-->
+
+# HTML 入門
 
 HTML学習記録.
 
@@ -503,3 +547,643 @@ Qiitaとかは，これ使ってるのかな??
 ## 文章とウェブサイトの構造
 
 ### 文章の基本構造
+
+こんな形でWebページを作ろうねという共通の認識がある．
+
+- ヘッダー:  
+  通常は大きな見出しやロゴがついた部分． 通常，ウェブページ間を移動しても，ウェブサイトに関する主な共通情報が留まっている場所．
+- ナビゲーションバー:  
+  サイトの主要部分のリンク．通常メニューボタン，リンク，またはタブで表さられる．  
+  ヘッダーと同様に，このコンテンツは通常，あるWebページから別のWebページへの一貫性を保っている．
+- メインコンテンツ:  
+  中央の大きな領域で，指定されたWebページの固有の内容をほとんど含む．
+- サイドバー:  
+  いくつかの周辺情報，リンク，引用，広告．
+- フッター:
+  通常，注意事項，著作権表示，連絡先情報が含まれるページの最下部．
+
+<img src="https://developer.mozilla.org/ja/docs/Learn/HTML/Introduction_to_HTML/Document_and_website_structure/sample-website.png" width=500>
+
+### HTMLレイアウト要素の詳細
+
+上に示した[webサイト](#文章の基本構造)の[コード](./Mozilla-Sample.html)をみてみる．
+
+あらかじめ，HTMLには基本構造を明記するための要素が用意されている．
+
+- `<main>`は，このページに固有のコンテンツようである．`<main>`はページごとに1回だけ使用する．  
+  `<body>`の中に直接入れる．
+- `<article>`は，ページの残りの部分なしで，それ自体が意味をなす関連コンテンツのブロックを囲む．
+- `<section>`は`<article>`に似ているが，1つの機能(例: ミニマップ，記事の見出しと要約のセット)を構成するページの単一部分をグループ化するためのものである．
+- `<aside>`には，メインコンテンツに直接関連しないコンテンツが含まれるが，それに間接的に関連する追加情報(用語集の項目, 著者略歴, 関連リンク)
+- `<header>`は，導入部のコンテンツ群を表す． もし，それが`<body>`の子であれば，Webページのグローバルヘッダーを定義する．
+- `<nav>`は，ページの主なナビゲーション機能を含む．
+- `<footer>`はページの終了コンテンツのグループを表す．
+
+### 非意味的要素
+
+非意味的要素(Non-semantic elements)は，HTMLにおいてそのタグ自体が特定の意味や情報を持たない要素のこと指す．  
+主にページのスタイリングやレイアウトの目的で使用される．
+
+`<span>`は**インラインの非意味的要素**である． コンテンツをラップするより良い意味的なテキスト要素が思いつかないか，または特定の意味を加えたくない場合にだけ使う．
+
+```html
+<p>
+  The King walked drunkenly back to his room at 01:00, the beer doing nothing to
+  aid him as he staggered through the door.
+  <span class="editor-note">
+    [Editor's note: At this point in the play, the lights should be down low].
+  </span>
+</p>
+```
+
+`<div>`は，**ブロックの非意味的要素**である．使用するセマンティック(意味や目的を持たせる)ブロック要素を考えない場合，または特定の要素を追加したくない場合にのみ使用する．
+
+```html
+<div class="shopping-cart">
+  <h2>Shopping cart</h2>
+  <ul>
+    <li>
+      <p>
+        <a href=""><strong>Silver earrings</strong></a
+        >: $99.95.
+      </p>
+      <img src="../products/3333-0985/thumb.png" alt="Silver earrings" />
+    </li>
+    <li>…</li>
+  </ul>
+  <p>Total cost: $237.89</p>
+</div>
+```
+
+上のような例文で使われるのは，必ずしも`<aside>`ではない．ページの主要なコンテンツから外れたコンテンツを表すために使用される．
+
+### 改行と水平線
+
+時々，使用する要素に`<br>`, `<hr>`の二つがある．
+
+- `<br>`: 改行要素
+
+```html
+<p>
+  There once was a man named O'Dell<br />
+  Who loved to write HTML<br />
+  But his structure was bad, his semantics were sad<br />
+  and his markup didn't read very well.
+</p>
+```
+
+以下は，出力例．
+
+<p>
+  There once was a man named O'Dell<br />
+  Who loved to write HTML<br />
+  But his structure was bad, his semantics were sad<br />
+  and his markup didn't read very well.
+</p>
+
+- `<hr>`: 主題分割要素
+
+```html
+<p>
+  Ron was backed into a corner by the marauding netherbeasts. Scared, but
+  determined to protect his friends, he raised his wand and prepared to do
+  battle, hoping that his distress call had made it through.
+</p>
+<hr />
+<p>
+  Meanwhile, Harry was sitting at home, staring at his royalty statement and
+  pondering when the next spin off series would come out, when an enchanted
+  distress letter flew through his window and landed in his lap. He read it
+  hazily and sighed; "better get back to work then", he mused.
+</p>
+```
+
+以下h，出力例．
+
+<p>
+  Ron was backed into a corner by the marauding netherbeasts. Scared, but
+  determined to protect his friends, he raised his wand and prepared to do
+  battle, hoping that his distress call had made it through.
+</p>
+<hr />
+<p>
+  Meanwhile, Harry was sitting at home, staring at his royalty statement and
+  pondering when the next spin off series would come out, when an enchanted
+  distress letter flew through his window and landed in his lap. He read it
+  hazily and sighed; "better get back to work then", he mused.
+</p>
+
+## マルチメディアの埋め込み
+
+### 画像の埋め込み
+
+```html
+<img
+  src="images/dinosaur.jpg"
+  alt="The head and torso of a dinosaur skeleton;
+          it has a large head with long sharp teeth"
+  width="300"
+  height="200"
+  title="A T-Rex on display in the Manchester University Museum"
+/>
+```
+
+`alt`属性は，画像が見えない/表示されない場合に，表示するために使う．  
+`title`属性は，マウスのホバーで出る説明文．
+
+背景に画像を埋め込む際は，**CSS**を使用する．
+
+#### レスポンシブ画像
+
+レスポンシブ画像は，画面のサイズ，解像度などの機能が大きく異なる場合でも適切に動作する画像．
+
+```html
+<img
+  srcset="elva-fairy-480w.jpg 480w, elva-fairy-800w.jpg 800w"
+  sizes="(max-width: 600px) 480px,
+         800px"
+  src="elva-fairy-800w.jpg"
+  alt="妖精の衣装を着たエルバ"
+/>
+```
+
+- secrets属性: ブラウザが選択することができる画像のセットと，それぞれの画像の寸法を定義する．
+  1. 画像のURL or パス
+  2. 画像の幅の内在的なピクセル数(480w) 単位はpxでななく，wを使う．
+- sizes属性: 画像が表示されるサイズを定義する．
+  1. メディア条件 CSSで詳しく学ぶ
+  2. 画像の幅の最大値を定義する．
+
+### 動画の埋め込み
+
+#### `<video>`要素
+
+動画の埋め込みは，`video`要素を使用する．
+
+```html
+<video src="rabbit320.webm" controls>
+  <p>
+    お使いのブラウザーは HTML 動画をサポートしていません。その代わりに<a
+      href="rabbit320.webm"
+      >動画へのリンク</a
+    >があります。
+  </p>
+</video>
+```
+
+- controls
+  ビデオプレーヤーのコントロールを表示する．独自のコントロールインターフェースを組み込むことができる．
+- `<video>`タグ内の段落
+  これは代替コンテンツと呼ばれ，ページにアクセスしているブラウザーが`<video>`要素に対応していない場合に表示され，古いブラウザーのための代替手段を提供する．
+
+<img src="https://developer.mozilla.org/ja/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content/simple-video.png" width="500">
+
+#### `<iframe>`要素
+
+`<iframe>`は，外部のページを埋め込むために使用される．  
+YouTubeでは，`<video>`要素が使われれず，`<iframe>`要素が使われる．
+
+```html
+<iframe
+  width="640"
+  height="360"
+  src="https://www.youtube.com/embed/zWL9jiOIElw"
+  title="#10 個人的に好きな黄猿の名言集【MAD】【ワンピース】"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+></iframe>
+```
+
+出力は，以下の通り．
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/zWL9jiOIElw" title="#10 個人的に好きな黄猿の名言集【MAD】【ワンピース】" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+しかしながら，`<iframe>`を利用する際は以下を考慮する必要がある．
+
+- セキュリティ
+  悪意あるスクリプトを含むサイトを埋め込むことで**XSS攻撃**のリスクが高まる．  
+  透明な`<iframe>`を重ねることで，ユーザが意図せず，別のボタンをクリックさせる，クリックジャッキングにきをつける．
+- パフォーマンスの低下
+  読み込む`<iframe>`によって，ページの読み込み速度が遅くなる．
+- ユーザビリティ
+  `<iframe>`を使った際に，そのコンテンツにアクセスできない可能性を考慮して，`title`属性を使用する．
+- サンドボックス属性
+  `<iframe>`には，`sandbox`属性を使用することで，JavaScriptの実行を禁止したり，フォームの送信, ポップアップウィンドウの起動を阻止したりすることができる．
+
+### その他埋め込み技術
+
+#### `<embed>`要素と`<object>`要素
+
+`<embed>`要素と`<object>`要素は，古いブラウザーで使われることが多い．  
+PDFなどの外部のコンテンツを埋め込むための汎用的なツールである．
+
+<table class="standard-table no-markdown">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"><a href="/ja/docs/Web/HTML/Element/embed"><code>&lt;embed&gt;</code></a></th>
+      <th scope="col"><a href="/ja/docs/Web/HTML/Element/object"><code>&lt;object&gt;</code></a></th>
+    </tr>
+  </thead><tbody>
+    <tr>
+      <td>埋め込みコンテンツの <a href="/ja/docs/Glossary/URL">URL</a></td>
+      <td><a href="/ja/docs/Web/HTML/Element/embed#src"><code>src</code></a></td>
+      <td><a href="/ja/docs/Web/HTML/Element/object#data"><code>data</code></a></td>
+    </tr>
+    <tr>
+      <td>埋め込みコンテンツの<em>正確な</em><a href="/ja/docs/Glossary/MIME_type">メディア種別</a></td>
+      <td><a href="/ja/docs/Web/HTML/Element/embed#type"><code>type</code></a></td>
+      <td><a href="/ja/docs/Web/HTML/Element/object#type"><code>type</code></a></td>
+    </tr>
+    <tr>
+      <td>プラグインで制御されるボックスの幅と高さ（CSS ピクセル単位）</td>
+      <td><a href="/ja/docs/Web/HTML/Element/embed#height"><code>height</code></a><br><a href="/ja/docs/Web/HTML/Element/embed#width"><code>width</code></a></td>
+      <td><a href="/ja/docs/Web/HTML/Element/object#height"><code>height</code></a><br><a href="/ja/docs/Web/HTML/Element/object#width"><code>width</code></a></td>
+    </tr>
+    <tr>
+      <td>プラグインに引数として供給するための名前と値</td>
+      <td>その場限りの属性とその名前と値</td>
+      <td>単一タグの <a href="/ja/docs/Web/HTML/Element/param"><code>&lt;param&gt;</code></a> 要素を <code>&lt;object&gt;</code> の中に書く</td>
+    </tr>
+    <tr>
+      <td>利用不可能なリソースに対する代替として独立した HTML コンテンツ</td>
+      <td>対応なし（<code>&lt;noembed&gt;</code> は廃止）</td>
+      <td>
+        <code>&lt;object&gt;</code> 内の
+        <code>&lt;param&gt;</code> 要素の後に入れる
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+#### ベクターグラフィック
+
+数式を用いて，図形, 線や色などを表現する画像形式の一種である．  
+ベクターグラフィックは，拡大縮小しても画質が劣化しない．  
+そのため，ロゴデザイン，イラストレーション，技術図面，フォント，ウェブデザインなどに用いられる．
+<img src="https://developer.mozilla.org/ja/docs/Learn/HTML/Multimedia_and_embedding/Adding_vector_graphics_to_the_Web/raster-vector-default-size.png" width=250>
+
+<img src="https://developer.mozilla.org/ja/docs/Learn/HTML/Multimedia_and_embedding/Adding_vector_graphics_to_the_Web/raster-vector-zoomed.png" width=500>
+
+SVG埋め込み例．
+以下は，コード例．
+
+```html
+<svg width="100%" height="100%">
+  <rect width="100%" height="100%" fill="red" />
+  <circle cx="100%" cy="100%" r="150" fill="blue" stroke="black" />
+  <polygon points="120,0 240,225 0,225" fill="green" />
+  <text
+    x="50"
+    y="100"
+    font-family="Verdana"
+    font-size="55"
+    fill="white"
+    stroke="black"
+    stroke-width="2"
+  >
+    Hello!
+  </text>
+</svg>
+```
+
+以下は，出力例．
+
+```html
+<svg width="100%" height="100%">
+  <rect width="100%" height="100%" fill="red" />
+  <circle cx="100%" cy="100%" r="150" fill="blue" stroke="black" />
+  <polygon points="120,0 240,225 0,225" fill="green" />
+  <text
+    x="50"
+    y="100"
+    font-family="Verdana"
+    font-size="55"
+    fill="white"
+    stroke="black"
+    stroke-width="2"
+  >
+    Hello!
+  </text>
+</svg>
+```
+
+#### HTMLテーブル
+
+HTMLテーブルは，表形式のデータに使用する必要がある．
+
+マークアップは以下の通り．
+
+```html
+<table>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Knocky</td>
+    <td>Flor</td>
+    <td>Ella</td>
+    <td>Juan</td>
+  </tr>
+  <tr>
+    <td>Breed</td>
+    <td>Jack Russell</td>
+    <td>Poodle</td>
+    <td>Streetdog</td>
+    <td>Cocker Spaniel</td>
+  </tr>
+  <tr>
+    <td>Age</td>
+    <td>16</td>
+    <td>9</td>
+    <td>10</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>Owner</td>
+    <td>Mother-in-law</td>
+    <td>Me</td>
+    <td>Me</td>
+    <td>Sister-in-law</td>
+  </tr>
+  <tr>
+    <td>Eating Habits</td>
+    <td>Eats everyone's leftovers</td>
+    <td>Nibbles at food</td>
+    <td>Hearty eater</td>
+    <td>Will eat till he explodes</td>
+  </tr>
+</table>
+```
+
+以下は出力例．
+
+<table>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Knocky</td>
+    <td>Flor</td>
+    <td>Ella</td>
+    <td>Juan</td>
+  </tr>
+  <tr>
+    <td>Breed</td>
+    <td>Jack Russell</td>
+    <td>Poodle</td>
+    <td>Streetdog</td>
+    <td>Cocker Spaniel</td>
+  </tr>
+  <tr>
+    <td>Age</td>
+    <td>16</td>
+    <td>9</td>
+    <td>10</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>Owner</td>
+    <td>Mother-in-law</td>
+    <td>Me</td>
+    <td>Me</td>
+    <td>Sister-in-law</td>
+  </tr>
+  <tr>
+    <td>Eating Habits</td>
+    <td>Eats everyone's leftovers</td>
+    <td>Nibbles at food</td>
+    <td>Hearty eater</td>
+    <td>Will eat till he explodes</td>
+  </tr>
+</table>
+
+# CSS 入門
+
+## CSSとは何か？
+
+CSSは，Cascading Style Sheetsの略で，ウェブページのスタイルを定義するための言語である．
+
+CSSは，ルールベースの言語である．
+以下は，`<h1>`要素に対して，赤色の文字色と，5emのフォントサイズを指定するCSSの例である．
+
+```css
+h1 {
+  color: red;
+  font-size: 5em;
+}
+```
+
+CSSの仕様は，W3C、WHATWG、ECMA、Khronos といった）標準化団体によって発行され、技術がどう働くよう期待されているかを定義されている．
+
+## CSSの基礎
+
+[CSSの基礎](./CSS_practice/01/index.html) に実行例を載せている
+
+### 特定の要素をスタイリングする
+
+```html
+<ul>
+  <li>Item one</li>
+  <li class="special">二つ目の項目</li>
+  <li><em>三つ目</em>の項目</li>
+</ul>
+```
+
+リスト要素の`special`クラスに対して，以下のようなスタイルを適用する．
+
+```css
+li.special {
+  color: orange;
+  font-weight: bold;
+}
+```
+
+このように，CSSによってリストの中の特定の項目に対して，特定のスタイルを適用することができる．
+
+### 文章の場所に基づいてスタイリングする
+
+`<li>`要素の中の`<em>`だけを選びたい時には，以下のように設定する．
+
+```css
+li em {
+  color: rebeccapurple;
+}
+```
+
+見出しの直後に来る段落を見出しと同じ段落レベルにしたい時は，以下のように設定する．
+
+```css
+h1 + p {
+  font-size: 200%;
+}
+```
+
+現状のスタイリングは以下の通り．
+<img src=".img/screenshot_20240224_224530.png" alt="nil">
+
+### 状態に基づいてスタイリングする
+
+以下は，リンクを開く前はピンクで，開いたあとは緑になるように設定している．
+
+```css
+a:link {
+  color: pink;
+}
+
+a:visited {
+  color: green;
+}
+
+a:hover {
+  text-decoration: none;
+}
+```
+
+## CSSの構造
+
+[index.html](./CSS_practice/02/index.html)に実行例を示す．
+
+### セレクター
+
+今までの`{}`の前で，スタイリングの対象をしていたものは，セレクターと呼ぶ．
+
+```css
+h1
+a:link
+.manythings
+#onething
+*
+.box p
+.box p:first-child
+h1, h2, .intro
+```
+
+### 詳細度
+
+二つのセレクターが同じ要素を選択する場合，どちらのスタイルが適用されるかは，セレクターの詳細度によって決まる．
+詳細度は，例えばクラスセレクターと要素セレクターでは，クラスセレクターの方が高い詳細度を持つ．
+
+同率の場合，後に記述されたスタイルが適用される．
+
+```css
+p {
+  color: red;
+}
+
+p {
+  color: blue;
+}
+```
+
+### プロパティと値
+
+- プロパティ:  
+  スタイルに関して変更できる何らかの特徴を表す，人間が理解できる識別子である．  
+  `font-size`, `color`, `background-color`などがある．
+- 値:  
+  プロパティをどのようにスタイル付けするかを示す．
+
+### 関数
+
+```css
+.outer {
+  border: 5px solid black;
+}
+
+.box {
+  padding: 10px;
+  width: calc(90% - 30px);
+  background-color: rebeccapurple;
+  color: white;
+}
+```
+
+以下のように，`calc()`関数を使用することで，`width`プロパティに対して，`90%`から`30px`を引いた値を設定することができる．  
+<img src=".img/screenshot_20240224_233038.png" alt="nil">
+
+### アットルール
+
+スタイルシートを別のCSSスタイルシートをインポートする．
+
+```css
+@import "styles2.css";
+```
+
+以下は，`<body>`要素に対して規定でピンクの背景を定義している．しかし，ブラウザのビューポート(ユーザが視認する領域のこと)30em以上の場合は，背景色を青に変更する．
+
+```css
+body {
+  background-color: pink;
+}
+
+@media (min-width: 30em) {
+  body {
+    background-color: blue;
+  }
+}
+```
+
+### 一括指定
+
+`font`, `background`, `padding`, `border`, `margin` のようなプロパティは一括指定プロパティ (shorthand properties) と呼ばれる．
+例えば，以下の二つのCSSは同じスタイリングである．
+
+以下は，一括指定プロパティを使用している．
+
+```css
+/* 4 つの値による一括定義、例えば padding や margin
+   では、値が適用される順序は top, right, bottom, left の順 (top から時計回り) です。
+   他の種類の一括指定もあり、例えば 2 つの値による一括指定を padding/margin に設定すると、
+   top/bottom と left/right になります。*/
+padding: 10px 15px 15px 5px;
+```
+
+以下は，それぞれのプロパティを指定する.
+
+```css
+padding-top: 10px;
+padding-right: 15px;
+padding-bottom: 15px;
+padding-left: 5px;
+```
+
+## CSSによるスタイリングおよびレンダリングまでの一連の流れ
+
+ブラウザがドキュメントを表示するまでの，ブラウザはそのコンテンツをスタイル情報と結合する．  
+以下の流れで行われる(JavaScriptは簡素化のため，ここで説明しない)．
+
+1. ブラウザがHTMLを読み込む．
+2. HTMLがDOM(Document Object Model)に変換される．DOMはコンピュータのメモリ内のドキュメントである．
+3. その後ブラウザーは埋め込まれた画像やビデオなどのHTMLドキュメントにリンクされているリソースとCSSを取得する．
+4. ブラウザは取得したCSSを解析し，要素，クラス，IDなどセレクタの種類ごちに分類する．見つけたセレクターに基づいて，DOMのどのノードにどのルールを敵将するかを決定し，スタイルを適用する．(この中間ステップをレンダーツリーと呼ぶ)
+5. レンダーツリーは，ルール適用後の構造にレイアウトされる．
+6. ページが画面に表示される．
+
+<img src="https://developer.mozilla.org/ja/docs/Learn/CSS/First_steps/How_CSS_works/rendering.svg" alt="レンダリングまでの流れ" custom="custom-bg">
+
+また，ブラウザの対応状況によっては，対応しないCSSがある．その場合，そのCSSは**無視される**．
+
+### DOM について
+
+DOMには，ツリーのような構造がある．  
+マークアップの各要素，属性，およびテキストは，ツリー構造のDOMノードになる．
+
+```css
+<p>
+  Let's use:
+  <span>Cascading</span>
+  <span>Style</span>
+  <span>Sheets</span>
+</p>
+```
+
+この場合，以下のようなツリー構造になる．
+
+```
+P
+├─ "Let's use:"
+├─ SPAN
+|  └─ "Cascading"
+├─ SPAN
+|  └─ "Style"
+└─ SPAN
+   └─ "Sheets"
+```
