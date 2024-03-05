@@ -3,6 +3,7 @@
 ## OVERVIEW
 
 <!--toc:start-->
+
 - [ThreeJS 入門](#threejs-入門)
   - [OVERVIEW](#overview)
   - [1. 基礎知識](#1-基礎知識)
@@ -47,7 +48,7 @@
       - [MeshStandardMaterial クラス](#meshstandardmaterial-クラス)
     - [1.13 Raycast](#113-raycast)
   - [2. 基本構造](#2-基本構造)
-<!--toc:end-->
+  <!--toc:end-->
 
 ## 1. 基礎知識
 
@@ -89,7 +90,7 @@ mesh.rotation.reorder("YXZ");
 mesh.rotation.set(Math.PI * 0.25, Math.PI * 0.25, 0);
 ```
 
-####  オブジェクトの回転
+#### オブジェクトの回転
 
 回転を数学的に表現する上で, オイラー角,回転行列とクォータニオンがある．
 
@@ -612,13 +613,13 @@ const material = new THREE.MeshBasicMaterial({
 
 ### 1.7 Texture
 
-
-
 #### PBR(Physically Based Rendering)
+
 PBRマテリアルとは，Physically Based Renderingの略で，物理ベースレンダリングを実現するためのマテリアルを指す．  
-光の挙動を実際の物理法則に従って，シミュレーションする．  
+光の挙動を実際の物理法則に従って，シミュレーションする．
 
 以下は，テクスチャ配信サイト
+
 > oliigon.com  
 > 3dtextures.me  
 > arroway-textures.ch  
@@ -629,15 +630,16 @@ PBRマテリアルとは，Physically Based Renderingの略で，物理ベース
 #### UV unwrapping
 
 3Dモデルの表面を2D平面に展開するプロセスのことをUV unwrappingと呼ぶ．  
-複雑な形状の場合，3Dソフトウェアを使用するのが一般的．  
+複雑な形状の場合，3Dソフトウェアを使用するのが一般的．
 
-以下は，UV unwrappingのイメージ．  
+以下は，UV unwrappingのイメージ．
 
 <img src="https://threejs-journey.com/assets/lessons/11/009.png" width=500>
 
 ##### 面(Face)の定義
+
 テクスチャの定義を理解するには，まず面の定義方法を知る必要がある．  
-3Dレンダリングにおける，六面体の各面は２つの三角形の組み合わせによって表現されている．  
+3Dレンダリングにおける，六面体の各面は２つの三角形の組み合わせによって表現されている．
 
 Three.jsでは，頂点の座標はGeometryオブジェクトのfacesという配列で定義される．  
 faces配列は，1個の三角形毎に半時計周りに定義すると紙面上向きが正面であると見なされる(右ねじの法則)．  
@@ -646,13 +648,14 @@ faces配列は，1個の三角形毎に半時計周りに定義すると紙面�
 上図は，一例であり開始する頂点はどれでも構わなない．
 
 ##### テクスチャの収集
+
 3Dでは，テクスチャの配置を定義することをUVマッピングと呼ぶ．  
 つまり，一つの面に対して複数のテクスチャを貼り付ける場合，UVマッピングが必要．  
-UVとはテクスチャを2次元とした場合に，U，V軸で定義することに由来する．(さらに，高さを定義したUVWマッピングも存在する)  
+UVとはテクスチャを2次元とした場合に，U，V軸で定義することに由来する．(さらに，高さを定義したUVWマッピングも存在する)
 
 <img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F102207%2Fb07677c9-1147-1a67-1481-7ba5c42534d2.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=e843a8907281a8b564d42d4e043bb4ef" width=500>
 
-下図でいうと，右方向がU軸正の向き，上方向がV正の向き. また，原点は左下となる．  
+下図でいうと，右方向がU軸正の向き，上方向がV正の向き. また，原点は左下となる．
 
 <img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F102207%2F87ea850a-3bc6-8ec7-5d39-4c591c90679b.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=6a2193aa42d99b3095bda47c464515c6" width=500>
 
@@ -661,21 +664,22 @@ UVとはテクスチャを2次元とした場合に，U，V軸で定義するこ
 ##### テクスチャ描画の最適化
 
 ###### Mipmapping
-Mipmappingとは，1x1のテクスチャになるまで，テクスチャの半分の小さいバージョンを何度も生成する技術．  
-filterとは，Mipmappingする際に複数のピクセルを平均化などの処理をかけることをいう．  
 
-Threejsには，二つのフィルタリング操作を標準搭載している．  
+Mipmappingとは，1x1のテクスチャになるまで，テクスチャの半分の小さいバージョンを何度も生成する技術．  
+filterとは，Mipmappingする際に複数のピクセルを平均化などの処理をかけることをいう．
+
+Threejsには，二つのフィルタリング操作を標準搭載している．
 
 - Minification filter
   Minification fileter(最小化フィルタ)は，テクスチャのピクセルがレンダリングのピクセルより小さい時に機能する．  
-  通常は，`THREE.LinearMipmapLinearFilter`が適用されている．  
+  通常は，`THREE.LinearMipmapLinearFilter`が適用されている．
 
 - Magnification filter
   Magnification filter(最大化フィルタ)は，テクスチャのピクセルがレンダリングのピクセルよりも大きい場合に機能する．つまりテクスチャが覆う面に対して小さすぎる場合.
-  
+
   例えば，以下の例では，
   <img src="https://threejs-journey.com/assets/lessons/11/021.png" width=500>
-  
+
   デフォルトは，`THREE.LinearFilter`が適用されているが，`THREE.NearestFilter`を適用することで，上記の問題を解決できる．  
   <img src="https://threejs-journey.com/assets/lessons/11/022.png" width=500>
 
@@ -683,16 +687,47 @@ Threejsには，二つのフィルタリング操作を標準搭載している�
 
 画像データはなるべく軽くしてやる必要がある．  
 pngファイルは，圧縮が比較的弱め，高画質だがファイル自体は重め．  
-jpegファイルは，圧縮が強め，低画質，低容量．  
-
+jpegファイルは，圧縮が強め，低画質，低容量．
 
 > [TinyPNG: 画像圧縮サイト](https://tinypng.com/)
 
+### 1.8 3D Text
+
+以下のような，3Dのテキストオブジェクトを生成することができる．
+<img src=".img/screenshot_20240305_182142.png" alt="nil">
+
+3Dテキストオブジェクトの中心が定義されてないため，中心を定義してやる必要がある．
+
+```js
+fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
+  const textGeometry = new TextGeometry("DONUTS!!", {
+    font: font,
+    size: 0.5,
+    height: 0.2,
+    curvedSegments: 6, // mesh resolution
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelSize: 0.02,
+    bevelOffset: 0,
+    bevelSegments: 4, // bevel (角) resolution
+  });
+
+  // bevel の分だけオフセットする
+  // textGeometry.computeBoundingBox();
+  // textGeometry.translate(
+  //   -(textGeometry.boundingBox.max.x - 0.02) * 0.5,
+  //   -(textGeometry.boundingBox.max.y - 0.02) * 0.5,
+  //   -(textGeometry.boundingBox.max.z - 0.02) * 0.5,
+  // );
+
+  // 上と同じ
+  textGeometry.center();
+}
+```
 
 ### 1.8 レンダラー
 
 レンダリングとは，3D空間に存在するオブジェクトを2D画像に変換することであり，その処理を行うのがレンダラーである．
-
 <img src="https://cdn-ak.f.st-hatena.com/images/fotolife/o/optim-tech/20230719/20230719102200.png" width="500">
 
 ### 1.9 シーン
@@ -795,8 +830,10 @@ scene.add(mesh);
 
 #### MeshNormalMaterial クラス
 
-ノーマルカラーをRGBで可視化するマテリアル．　　
-ライティングを必要しないとため，手動に動作確認する時に役立つ．
+ノーマルカラーをRGBで可視化するマテリアル．  
+ライティングを必要しないとため，手動に動作確認する時に役立つ．  
+色は，面に対しての法線ベクトルがカメラによってどの角度で見えるかによって定まる．  
+つまり，回転する球は常に同じ色に見える．
 
 ```js
 // ドーナツを作成
@@ -808,6 +845,35 @@ const mesh = new THREE.Mesh(geometry, material);
 // 3D空間にメッシュを追
 scene.add(mesh);
 ```
+
+#### MeshMatcapMaterial クラス
+
+カメラの法線ベクトルによって，色を決定するマテリアル．  
+光源がなくても，影がつくような見た目になる．よって，他の陰影と矛盾しないようにする必要がある．
+
+以下は，Matcapのサンプル集．
+
+> [参考: Matcap Samples](https://github.com/matcaps)
+
+また，Matcapは作成することができる．
+具体的な手法としては，Blenderで**球に(必ず)**光を投影して，それをテクスチャとして保存する方法である．
+
+以下が，Matcapを確認できるサイト
+
+> [参考: Matcap Debug UI](https://kchapelier.com/matcap-studio/)
+
+```js
+// ドーナツを作成
+const geometry = new THREE.TorusGeometry(300, 100, 64, 100);
+// マテリアルを作成
+const material = new THREE.MeshMatcapMaterial();
+// メッシュを作成
+const mesh = new THREE.Mesh(geometry, material);
+// 3D空間にメッシュを追
+scene.add(mesh);
+```
+
+<img src="https://threejs-journey.com/assets/lessons/12/014.jpg" alt="matcap">
 
 #### MeshLambertMaterial クラス
 
@@ -842,6 +908,9 @@ scene.add(mesh);
 #### MeshToonMaterial クラス
 
 アニメのような，トゥーンシェーディングを表現するマテリアル．ライトを当てると，陰影がつく．
+
+仮に，独自のtextureを利用する際に解像度が低い場合，
+`minFilter`と`magFilter`を設定する必要がある．
 
 ```js
 // ドーナツを作成
