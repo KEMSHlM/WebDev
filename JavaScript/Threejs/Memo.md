@@ -741,6 +741,8 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
 
 ### 1.11 光源
 
+以下に，複数の光源の使用例を示す.
+
 #### AmbientLight クラス
 
 環境光を表すクラス．３D空間全体を均一に照らす．一律に明るくしたい時に重宝される．
@@ -807,6 +809,32 @@ scene.add(light);
 ```
 
 <img src="https://ics.media/_assets/tutorial-three/light_spot__1440.png" width="500">
+
+#### RectAreaLight クラス
+
+```js
+// 長方形光源を作成
+const spotLight = new THREE.SpotLight(
+  0x78ff00, // color
+  4.5, // intensity
+  10, // distance
+  Math.PI * 0.1, // angle
+  0.25, // penumber (光の輪郭)
+  1, // decay(光の減衰)
+);
+scene.add(light);
+```
+
+光は負荷が重め
+
+- 軽め
+  AmbientLight, HemisphereLight
+- 中程度
+  DirectionalLight, PointLight
+- 高め
+  SpotLight, RectAreaLight
+
+そこで，負荷を軽くするために，**Baking**あらかじめテクスチャに影を描いておく手法が取られる．
 
 ### 1.12 Material
 
