@@ -836,6 +836,23 @@ scene.add(light);
 
 そこで，負荷を軽くするために，**Baking**あらかじめテクスチャに影を描いておく手法が取られる．
 
+### 1.12 Shadow
+
+影の演出を行う方法は，二つある．
+一つ目は，ライトを用いて影を描写する方法である．
+
+```js
+renderer.shadowMap.enabled = true;
+// ライトに影を有効にする
+directionalLight.castShadow = false;
+// オブジェクトに影を有効にする
+plane.receiveShadow = false;
+```
+
+二つは，Baked Shadowである．  
+あらかじめテクスチャに影を焼き付けておく手法．  
+ライトの位置が固定されている場合にのみ有効であり，GPU負荷を軽減することができる．
+
 ### 1.12 Material
 
 #### MeshBasicMaterial クラス

@@ -5,6 +5,14 @@ import GUI from "lil-gui";
 /**
  * Base
  */
+const textureLoader = new THREE.TextureLoader();
+const bakedShadow = textureLoader.load("/textures/bakedShadow.jpg");
+const simpleShadow = textureLoader.load("/textures/simpleShadow.jpg");
+bakedShadow.colorSpace = THREE.SRGBColorSpace;
+
+/**
+ * Base
+ */
 // Debug
 const gui = new GUI();
 
@@ -31,7 +39,7 @@ gui.add(directionalLight.position, "y").min(-5).max(5).step(0.001);
 gui.add(directionalLight.position, "z").min(-5).max(5).step(0.001);
 scene.add(directionalLight);
 
-directionalLight.castShadow = true;
+directionalLight.castShadow = false;
 
 directionalLight.shadow.mapSize.width = 1024;
 directionalLight.shadow.mapSize.height = 1024;
@@ -71,7 +79,11 @@ scene.add(spotLightHelper);
 // Point light
 const pointLight = new THREE.PointLight(0xffffff, 0.5, 2.7);
 
-pointLight.castShadow = true;
+pointLight.castShadow = false;
+pointLight.shadow.mapSize.width = 1024;
+pointLight.shadow.mapSize.height = 1024;
+pointLight.shadow.camera.near = 0.1;
+pointLight.shadow.camera.far = 5;
 
 pointLight.position.set(-1, 1, 0);
 scene.add(pointLight);
@@ -91,14 +103,31 @@ gui.add(material, "roughness").min(0).max(1).step(0.001);
  * Objects
  */
 const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), material);
-sphere.castShadow = true;
+sphere.castShadow = false;
 
-const plane = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), material);
+const plane = new THREE.Mesh(
+  new THREE.PlaneGeometry(5, 5),
+  // new THREE.MeshBasicMaterial({
+  //   map: bakedShadow,
+  // }),
+);
 plane.rotation.x = -Math.PI * 0.5;
 plane.position.y = -0.5;
-plane.receiveShadow = true;
+plane.receiveShadow = false;
 
 scene.add(sphere, plane);
+
+const sphereShadow = new THREE.Mesh(
+  new THREE.PlaneGeometry(1.5, 1.5),
+  new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    alphaMap: simpleShadow,
+  }),
+);
+sphereShadow.rotation.x = -Math.PI / 2;
+sphereShadow.position.y = plane.position.y + 0.01;
+scene.add(sphereShadow);
 
 /**
  * Sizes
@@ -164,6 +193,15 @@ const tick = () => {
   // Update controls
   controls.update();
 
+  // Update the sphere
+  sphere.position.x = Math.cos(elapsedTime) * 1.5;
+  sphere.position.z = Math.sin(elapsedTime) * 1.5;
+  sphere.position.y = Math.abs(Math.sin(elapsedTime * 3));
+
+  sphereShadow.position.x = sphere.position.x;
+  sphereShadow.position.z = sphere.position.z;
+  sphereShadow.material.opacity = (1 - sphere.position.y) * 0.3;
+
   // Render
   renderer.render(scene, camera);
 
@@ -172,4 +210,3 @@ const tick = () => {
 };
 
 tick();
-
