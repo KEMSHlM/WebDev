@@ -110,7 +110,7 @@ mesh.rotation.set(Math.PI * 0.25, Math.PI * 0.25, 0);
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Eulerangles.svg/300px-Eulerangles.svg.png" width=500>
 
 上記の定義では，z軸-x\'軸-z\'\'軸の順で回転する．この順番をオイラー角の回転順序といい，  
-この場合z-x-z系のオイラー角と呼ばれる．  
+この場合z-x-z系のオイラー角と呼ばれる．(左に書いてある方が内側)  
 この回転順序には，i-j-kタイプとi-j-iタイプがある．そのため，3! + 3C1 = 12通りのオイラー角が存在する．
 
 逆を言い返せば，(x, y, z)から(X, Y, Z)へ変換するには，どんな変換であれ，3回の手続きで変換可能であり，その回転方法は12通りあるということだ．
@@ -153,6 +153,8 @@ $$
 
 > [参考:ジンバルロックDEMO](https://arihide.github.io/demos/gimbal/)  
 > [参考:ジンバルロック解説](https://qiita.com/Arihi/items/4b306feb3d9e6cd93204)
+
+<img src="../Threejs/.img/qrcode_arihide.github.io.png">
 
 ###### 固定角
 
@@ -221,7 +223,7 @@ mesh.rotation.x = Math.PI * 0.25;
 三次元空間にて，
 
 方向ベクトル$(\lambda_x, \lambda_y, \lambda_z)$を回転軸として, 角度$\theta$回転させるという「回転クォータニオン」は，  
-四次元ベクトル$(\lambda_x \sin\frac{\theta}{2}, \lambda_x \sin\frac{\theta}{2}, \lambda_x \sin\frac{\theta}{2}, \cos\frac{\theta}{2})$
+四次元ベクトル$(\cos\frac{\theta}{2}, \lambda_x \sin\frac{\theta}{2}, \lambda_y \sin\frac{\theta}{2}, \lambda_z \sin\frac{\theta}{2})$
 
 なぜ，$\frac{\theta}{2}$ を用いるのかは，後述する．
 
@@ -239,10 +241,10 @@ $$
 \end{align}}
 $$
 
-ここで，回転軸$\vec{n}$ と垂直成分$\vec{r_{\perp}}$に直行している回転面にあるベクトル\vec{v}を導入する．
+ここで，回転軸$\vec{n}$ と垂直成分$\vec{r_{\perp}}$に直行している回転面にあるベクトル$\vec{v}$を導入する．
 
 $$
-\vec{r_{\perp}^{'}} = \cos\vec{r_{\perp}} + \sin\vec{v}
+\vec{r_{\perp}^{'}} = \cos{\theta}\vec{r_{\perp}} + \sin{\theta}\vec{v}
 $$
 
 あとは，垂直成分ベクトル$\vec{r_{\|}}$との合成により，
