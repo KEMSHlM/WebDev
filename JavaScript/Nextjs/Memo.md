@@ -19,6 +19,9 @@ Next.js 14を学習備忘録．
   - [Link Navigation](#link-navigation)
   - [Error Handling](#error-handling)
   - [Parallel Routing](#parallel-routing)
+    - [Slots](#slots)
+  - [Interceptional Routing](#interceptional-routing)
+  - [Route Handlers](#route-handlers) - [関数名のルール](#関数名のルール) - [メリット](#メリット)
   <!--toc:end-->
 
 # React
@@ -344,3 +347,51 @@ export default function Layout({
 ```
 
 例え，レイアウト内の一部のスロットがロード中であったり，エラーが発生してレンダリングできない場合でも，他のスロットはレンダリングされる ．
+
+## Interceptional Routing
+
+ルートをインターセプト(傍聴的な)することができる．  
+現在のレイアウト上でアプリケーションの別の部分からルートをロードすることができる．  
+ユーザが別のコンテキストに切り替えることなく，ルートの内容を表示したい時に役立つ．
+
+以下のようなログインが当てはまる．
+
+<img src=".img/screenshot_20240321_134229.png" alt="nil" width=500>
+
+インターセプトルートをする際は，以下のルールに従ってフォルダ名を設定する．
+
+- `(.)temp` 同じ階層．
+- `(..)temp` 一つ上の階層
+- `(..)(..)temp` 二つ上の階層
+- `(...)temp` ルートディレクトリをさす．
+
+## Route Handlers
+
+ルートハンドラを使用することで，WebリクエストAPIとレスポンスAPIを使用して, 指定したルートのカスタムリクエストハンドラを作成する．
+
+- `/app`フォルダ内に配置．
+- ファイル名は`route.ts`.
+- `page.tsx`と同じ階層においていない．
+
+例えば，クライアント側から`fetch("/api/admin")`と呼び出す場合，`route.ts`ファイルは，`/app/api/admin/route.ts`に配置されている必要がある．  
+また，`page.tsx`と`route.tsx`が同じ階層にある場合，`route.tsx`が優先される．
+
+### 関数名のルール
+
+例えば，`/app/api/test`にGETリクエストを送ると，JSON形式で`{"msg": "hello, world"}`を返す処理があるとする場合，
+以下のように関数名を`GET`と命名する必要がある．
+
+```ts
+import { NextRequest, NextResponse } from "next/server";
+
+export function GET(req: NextRequest) {
+  const res = NextResponse.json({ msg: "hello,world!" });
+  return res;
+}
+```
+
+同様に，POST，DELETE，PUTなどのメソッドを使用する．
+
+### Cache機能
+
+Route Handlers では，条件を満たす場合はレスポンスをキャッシュして，処理を高速化する．
