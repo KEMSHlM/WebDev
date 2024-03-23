@@ -21,7 +21,7 @@ Next.js 14を学習備忘録．
   - [Parallel Routing](#parallel-routing)
     - [Slots](#slots)
   - [Interceptional Routing](#interceptional-routing)
-  - [Route Handlers](#route-handlers) - [関数名のルール](#関数名のルール) - [メリット](#メリット)
+  - [Route Handlers](#route-handlers) - [関数名のルール](#関数名のルール) - [Cache機能](#cache機能)
   <!--toc:end-->
 
 # React
@@ -368,17 +368,22 @@ export default function Layout({
 ## Route Handlers
 
 ルートハンドラを使用することで，WebリクエストAPIとレスポンスAPIを使用して, 指定したルートのカスタムリクエストハンドラを作成する．
+Route Handlers では，条件を満たす場合はレスポンスをキャッシュして，処理を高速化する．
+
+??バックエンド側の機能をNextで作るため??
 
 - `/app`フォルダ内に配置．
 - ファイル名は`route.ts`.
 - `page.tsx`と同じ階層においていない．
+
+<img src=".img/screenshot_20240322_003255.png" alt="nil">
 
 例えば，クライアント側から`fetch("/api/admin")`と呼び出す場合，`route.ts`ファイルは，`/app/api/admin/route.ts`に配置されている必要がある．  
 また，`page.tsx`と`route.tsx`が同じ階層にある場合，`route.tsx`が優先される．
 
 ### 関数名のルール
 
-例えば，`/app/api/test`にGETリクエストを送ると，JSON形式で`{"msg": "hello, world"}`を返す処理があるとする場合，
+例えば，`/app/api/test`にGETリクエストを送ると，JSON形式で`{"msg": "hello, world"}`を返す処理があるとする場合，  
 以下のように関数名を`GET`と命名する必要がある．
 
 ```ts
@@ -392,6 +397,135 @@ export function GET(req: NextRequest) {
 
 同様に，POST，DELETE，PUTなどのメソッドを使用する．
 
-### Cache機能
+### キャッシング
 
-Route Handlers では，条件を満たす場合はレスポンスをキャッシュして，処理を高速化する．
+`Response`オブジェクトで，`GET`メソッドを使用する場合は，Routeハンドラはデフォルトでキャッシュされる．  
+キャッシングとはなんなのか？以下の例を見てみる．
+
+```ts
+export default function GET() {
+  return Response.json({
+    time: new Date().toLocaleTimeString(),
+  });
+}
+```
+
+以下の例では，`time`がキャッシュされる．  
+リロードしても，`time`が更新されない．
+<img src=".img/screenshot_20240322_013505.png" alt="nil" width="500">
+
+?? データがキャッシュされるの -> GETの結果を維持的に保存して，再利用する．??
+
+キャッシュ無効にするには，以下の方法がある．
+
+- `GET`メソッドで`Request`オブジェクトを使用する．
+- その他のHTTPメソッドを使用する．
+- `cookies`や`headers`などの`Dynamic Function`を使用する．
+- セグメント設定オプションで手動で動的モードを指定する．
+
+`export const dynamic = "force-dynamic"`を文頭に置くことで，キャッシュを防げる．
+
+### 静的データの再検証
+
+静的データの再検証フェッチは，`next.revalidate`オプションを使ってできる．
+
+```ts
+export async function GET() {
+  const res = await fetch("https://data.mongodb-api.com/...", {
+    next: { revalidate: 60 }, // Revalidate every 60 seconds
+  });
+  const data = await res.json();
+
+  return Response.json(data);
+}
+```
+
+### ヘッダーの読み取り
+
+`next/headers`を使って，ヘッダーを読み込むことができる．  
+httpリクエストは，必ずヘッダーを持っている．
+
+ヘッダーは，コンテンツタイプ，コンテンツ長さ，認証情報，クッキーなどの情報を含む．
+
+```ts
+import { headers } from "next/headers";
+
+export async function GET(request: Request) {
+  const headersList = headers();
+  const referer = headersList.get("referer");
+
+  return new Response("Hello, Next.js!", {
+    status: 200,
+    headers: { referer: referer },
+  });
+}
+```
+
+### Middleware
+
+ミドルウェア(Middleware)は，クライアントとサーバーの間で働く．  
+リクエストとレスポンスを適切に処理する．  
+リクエストがサーバーに到達する前に何か特別な処理をしたり，レスポンスをクライアントに送る前に処理を行う．
+
+- URLリダイレクトを行う．
+- URLリライトを行う．
+- リクエストとレスポンスを変更する．
+- ヘッダーの強化する．
+- 送受信リクエストの追跡をする．
+
+ファイル名には，`middleware.js`と`middleware.ts`が使うことができる．
+
+<img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F44761%2F036da29a-731d-89cc-fbf2-3547ec43a3f5.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=e228bdd1cce22da3a9fcbc97e79e6e9e" width="500">
+
+> [Metadata](https://qiita.com/masakinihirota/items/30a5e06e3288031b9788)
+
+## Rendering
+
+### CSR(Client-side Rendering)
+
+`CSR`は，`Client Side Rendering`の略で，日本語で訳すと`クライアント側でのレンダリング`．
+
+CSRでは，クライアントのリクエストに対して，空のHTMLとJSを返し，クライアント側でJSを実行してレンダリング，およびデータ取得を行う．  
+このJSには，コンテンツを動的に生成するコードが含まれている．
+
+具体的には，
+
+- JavaScriptのダウンロード：ページにアクセスすると，サーバーからHTMLとJavaScriptがダウンロードされる ．
+- JavaScriptの実行：非同期処理などを用いて，ページのコンテンツを生成する．
+- コンテンツのレンダリング：JavaScriptによって生成されたコンテンツは，実行された後にブラウザのDOMに追加される．
+
+<img src=".img/screenshot_20240323_174905.png" alt="nil">
+
+Reactのみを使って，SPA(Single Page Application)をつくる場合に`useEffect`の中でデータを`fetch` して結果を`useState`に渡して，表示するというやり方．
+
+CSRには以下の2つの問題点がある．
+
+- クライアントのリクエストに対して空のHTMLを返すため，SEO(Search Engine Optimization)とOGP(Open Graph Protocol)に対応できない．
+- クライアント側で，JSを実行するため，初期表示が遅い．
+
+### SSR(Server-side Rendering)
+
+SSRは，`Server Side Rendering`の略で，日本語で訳すと`サーバー側でのレンダリング`．
+
+SSRでは，クライアントのリクエストに対して，サーバ側でデータを取得して，HTMLを生成しそれを返す．  
+サーバー側でHTMLを生成するため，SEOとOGPに対応している．
+
+<img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F542663%2F47802fde-5799-67ea-d625-c680dfc07281.png?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=66adb12b021178d716307c7b750bb123" width="500">
+
+1. ブラウザがURLページのリクエストを送信．
+2. サーバ側はAPI連携でデータを取得．
+3. サーバがデータを取得し，希望なデータを含むレンダリングHTMLを生成．
+4. ブラウザーに非インタラクティブなHTMLを返す．
+5. ブラウザに非インタラクティブなHTMLが送信される(JavaScriptは送られない)．
+6. ブラウザがHTMLにおいてるJavaScriptファイルをロードする．
+7. ブラウザがフレームワークを実行ページからインタラクティブになる．
+
+### SSG(Static Site Generation)
+
+SSGは，`Static Site Generation`の略で，日本語で訳すと`静的サイト生成`．  
+SSGはビルド時にサーバー側でデータを取得して，HTMLを生成して，リクエストに対してそれを返す．  
+事前にHTMLを生成するため，CDNにキャッシュさせることでができ，SSRよりパフォーマンスに優れる．
+
+<img src="https://storage.googleapis.com/zenn-user-upload/6747bd849d64-20220206.png" width=500>
+
+### ISR(Incremental Static Regeneration)
