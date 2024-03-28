@@ -30,6 +30,11 @@
       - [PBR(Physically Based Rendering)](#pbrphysically-based-rendering)
       - [UV unwrapping](#uv-unwrapping)
         - [面(Face)の定義](#面faceの定義)
+        - [テクスチャの収集](#テクスチャの収集)
+        - [テクスチャ描画の最適化](#テクスチャ描画の最適化)
+          - [Mipmapping](#mipmapping)
+        - [画像データの選択](#画像データの選択)
+    - [1.8 3D Text](#18-3d-text)
     - [1.8 レンダラー](#18-レンダラー)
     - [1.9 シーン](#19-シーン)
     - [1.10 マテリアル](#110-マテリアル)
@@ -39,15 +44,18 @@
       - [HemisphereLight クラス](#hemispherelight-クラス)
       - [PointLight クラス](#pointlight-クラス)
       - [SpotLight クラス](#spotlight-クラス)
+      - [RectAreaLight クラス](#rectarealight-クラス)
+    - [1.12 Shadow](#112-shadow)
     - [1.12 Material](#112-material)
       - [MeshBasicMaterial クラス](#meshbasicmaterial-クラス)
       - [MeshNormalMaterial クラス](#meshnormalmaterial-クラス)
+      - [MeshMatcapMaterial クラス](#meshmatcapmaterial-クラス)
       - [MeshLambertMaterial クラス](#meshlambertmaterial-クラス)
       - [MeshPhongMaterial クラス](#meshphongmaterial-クラス)
       - [MeshToonMaterial クラス](#meshtoonmaterial-クラス)
       - [MeshStandardMaterial クラス](#meshstandardmaterial-クラス)
     - [1.13 Raycast](#113-raycast)
-  - [2. 基本構造](#2-基本構造)
+  - [2. React Three Fiber](#2-react-three-fiber)
   <!--toc:end-->
 
 ## 1. 基礎知識
@@ -993,14 +1001,4 @@ scene.add(mesh);
 raycastとは，光線を発射してその光線が当たったオブジェクトを取得することである．
 当たり判定などの処理に利用される．
 
-## 2. 基本構造
-
-- THREE.Scene クラス
-  3D空間を作成するためのクラス．３Dオブジェクトはシーンにadd()メソッドを利用して追加することができる．
-
-- THREE.PerspectiveCamera クラス
-  3D空間を撮影するためのカメラ．視点を制御するのに仕様する．3D空間のどの視点で撮影しているのかの情報が必要になる．
-
-- THREE.WebGLRenderer クラス
-  3D空間をレンダリングするためのクラス．レンダリングとは，Three.jsで計算した3Dオブジェクトを画面に表示することである．  
-  Three.jsでは，requestAnimationFrame()メソッドを利用して，ブラウザの更新タイミングに合わせてレンダリングを行う．
+## 2. React Three Fiber

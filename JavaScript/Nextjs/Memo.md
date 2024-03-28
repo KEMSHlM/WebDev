@@ -21,7 +21,13 @@ Next.js 14を学習備忘録．
   - [Parallel Routing](#parallel-routing)
     - [Slots](#slots)
   - [Interceptional Routing](#interceptional-routing)
-  - [Route Handlers](#route-handlers) - [関数名のルール](#関数名のルール) - [Cache機能](#cache機能)
+  - [Route Handlers](#route-handlers)
+    - [関数名のルール](#関数名のルール)
+    - [キャッシング](#キャッシング)
+    - [静的データの再検証](#静的データの再検証)
+    - [ヘッダーの読み取り](#ヘッダーの読み取り)
+    - [Middleware](#middleware)
+  - [Rendering](#rendering) - [CSR(Client-side Rendering)](#csrclient-side-rendering) - [SSR(Server-side Rendering)](#ssrserver-side-rendering) - [SSG(Static Site Generation)](#ssgstatic-site-generation) - [ISR(Incremental Static Regeneration)](#isrincremental-static-regeneration)
   <!--toc:end-->
 
 # React
@@ -529,3 +535,10 @@ SSGはビルド時にサーバー側でデータを取得して，HTMLを生成�
 <img src="https://storage.googleapis.com/zenn-user-upload/6747bd849d64-20220206.png" width=500>
 
 ### ISR(Incremental Static Regeneration)
+
+ISRは，`Incremental Static Regeneration`の略. SSGとSSRの中間のようなもの．  
+リクエストに対して，静的にビルドされたページを返す．
+
+有効期限を設けることで，静的ページの再生成をSSRで行う．
+
+<img src="https://res.cloudinary.com/zenn/image/fetch/s--ylkQq6dI--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_1200/https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/563635/99873f1a-661e-6084-c956-2bc589b38ef6.png" width="500">

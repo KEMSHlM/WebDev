@@ -328,10 +328,10 @@ export class TodoService {
 ##### コマンド実行例
 
 ```shell
- docker-compose up -d
- npx typeorm migration:generate -n CreateItem
- npx typeorm migratino:run
- npm run start:dev
+docker-compose up -d
+npx typeorm migration:generate -n CreateItem
+npx typeorm migratino:run
+npm run start:dev
 ```
 
 ##### Repository
