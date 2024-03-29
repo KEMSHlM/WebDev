@@ -298,3 +298,375 @@ function MyButton({ count, onClick }) {
 ## Reactの流儀
 
 <img src="https://ja.react.dev/images/docs/s_thinking-in-react_ui_outline.png" width=500 />
+
+## React hooks
+
+### useState
+
+stateを使うと，ユーザの入力などの上をコンポネントに『記憶』させることができる．
+
+1. 状態変数(State Variable): これは現在の状態の値を保持する．
+2. 状態更新関数(State Updater Function): 状態を更新するための関数．
+
+```js
+import { useState } from "react";
+
+export const Example = () => {
+  //   1. 状態変数countを宣言し、初期値0を設定
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      {/* 2. ボタンクリック時に状態を更新 */}
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+};
+```
+
+### useEffect
+
+Reactアプリケーションは，ユーザインターフェースの構築や更新に関する主要なタスクを処理するために，コンポーネントを使用する．  
+しかしながら，アプリケーションにはコンポーネントの描画以外にデータの読み込みや外部イベントなどの副作用を必要とすることがある．  
+このような副作用を管理するために，Reactは`useEffect`を提供している．
+
+1. useEffect関数内で副作用の処理を定義する． これはAPI呼び出し，イベントリスナーの設定などの処理を含むことがある．
+2. オプションとして，return ステートメントを使用してクリーンアップ関数を提供可能．コンポーネントがアンマウントされる前や再レンダリング時に実行される．このクリーンアップ関数は，リソースの解放やイベントリスナーの削除など，副作用をクリーンアップするために使用される．
+3. フックの第二引数として，`dependecies`(依存関係)の配列を指定できる．この配列に含まれる値が変更された場合，副作用の処理が再実行される．依存関係が空配列の場合，副作用は初回のレンダリング時にのみ実行される．第二引数に何も指定されていない場合，レンダリング毎に実行される．
+
+?? 初回に実行されるのは，最後のreturn? ??
+
+例1
+
+```js
+import { useState, useEffect } from "react";
+
+export const DataFetching = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("https://api.example.com/data")
+      .then((response) => response.json())
+      .then((data) => setData(data));
+  }, []); // 依存関係が空なので初回のレンダリング時のみ実行
+
+  return (
+    <div>
+      <ul>
+        {data.map((item) => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+```
+
+例2,
+
+```js
+import { useState, useEffect } from "react";
+
+export const DataFetching = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("https://api.example.com/data")
+      .then((response) => response.json())
+      .then((data) => setData(data));
+  }, []); // 依存関係が空なので初回のレンダリング時のみ実行
+
+  return (
+    <div>
+      <ul>
+        {data.map((item) => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+```
+
+?? 例2はある種初期化みたいな感じか？ ??
+
+例3，よくあるミス
+
+以下は無限レンダリングが生じる．  
+`useEffect`内で第二引数に変更を加えた場合に生じる．
+
+1. 初回レンダリング時に useEffect が呼び出され、count の値を変更する
+2. レンダリング前後で count の値が変わっているので useEffect が呼び出される
+3. useEffect が呼び出され count の値を変更する
+4. 再レンダリングする
+
+上の2, 3が繰り返される．
+
+```js
+useEffect(() => {
+  console.log("countを更新", count);
+  setCount((prev) => prev + 1);
+}, [count]);
+```
+
+> [参考文献](https://qiita.com/diskszk/items/333511fb97d24f52a439)
+
+### useContext
+
+グローバルにデータを管理することができる仕組み．  
+通常親コンポーネントにデータを渡す際は，`props`を介してデータを渡すことが多い．  
+しかし，親から子，そのまた子となると複数のコンポーネントを介してデータを渡す場合にバケツリレーのようなやり方だったら，設定が複雑になる．
+
+### useRef
+
+関数コンポーネントでは，Classコンポーネント時のref属性の代わりに，`useRef`を使って要素への参照を行う．  
+また，`useRef`は`useState`のように，コンポーネントないでの値を保持することができる．
+
+`Ref`オブジェクトは，アンマウントされるまで存在し続けること，自由に書き換えることができるのが特徴である．
+
+多用は厳禁で，`useRef`を使うべき場面は限られている．
+
+?? Ref属性を持つオブジェクトがRefオブジェクト？ -> 違う下で説明してる ??
+
+比較のために，一般的なオブジェクトの挙動を確認する．
+
+```js
+import React, { useState } from "react";
+
+const list = [];
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const onClick = () => {
+    setCount((c) => c + 1);
+  };
+
+  const obj = {}; // objは、`Ref`ではない一般的なオブジェクト
+  list.push(obj);
+  if (list.length >= 2) {
+    console.log(list[list.length - 2] === list[list.length - 1]); // X
+  }
+
+  return (
+    <div>
+      <button type="button" onClick={onClick}>
+        count up
+      </button>
+      {count}
+    </div>
+  );
+};
+
+export default App;
+```
+
+再レンダリング毎に，新しいobjが生成され，listに追加される．  
+そのため，consoleには`false`が表示される．
+
+次に，useRefを使って，Refオブジェクトを生成する．
+
+```ts
+import React, { useState, useRef } from "react";
+
+const list = [];
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const onClick = () => {
+    setCount((c) => c + 1);
+  };
+
+  const obj = useRef;
+  list.push(obj);
+  if (list.length >= 2) {
+    console.log(list[list.length - 2] === list[list.length - 1]); // X
+  }
+
+  return (
+    <div>
+      <button type="button" onClick={onClick}>
+        count up
+      </button>
+      {count}
+    </div>
+  );
+};
+
+export default App;
+```
+
+これは，常に`true`が表示される．  
+つまりマウント時に`useRef`で生成した`Ref`オブジェクトをそのまま使い続けている．
+
+以下は，`useRef`と`useState`を同時に利用する例である．
+
+```js
+import React, { useState, useRef, useEffect } from "react";
+
+const App = () => {
+  const [count, setCount] = useState(0);
+  const onClick = () => {
+    setCount((c) => c + 1);
+  };
+
+  return (
+    <div>
+      <Child count={count} />
+      <button type="button" onClick={onClick}>
+        count up
+      </button>
+    </div>
+  );
+};
+
+const Child = ({ count }) => {
+  const ref = useRef("--");
+
+  useEffect(() => {
+    ref.current = count;
+  });
+
+  return (
+    <div>
+      Before: {ref.current}
+      <br />
+      Now: {count}
+    </div>
+  );
+};
+
+export default App;
+```
+
+これは，Before: 0, Now: 1といったように違う値を表示する．  
+重要なのは， **`useRef`がレンダリングの結果がDOMに反映された後に実行される** という点である．
+つまり，実際に画面に表示される前の値が`ref.current`の値である．
+
+これは公式の例．
+
+```js
+const App = () => {
+  const inputEl = useRef(null);
+  const handleClick = () => {
+    inputEl.current.focus();
+    console.log("inputEl.current:", inputEl.current);
+    //inputEl.current: <input type="text">
+  };
+  return (
+    <>
+      <input ref={inputEl} type="text" />
+      <button onClick={handleClick}>入力エリアをフォーカスする</button>
+    </>
+  );
+};
+```
+
+<img src="https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F218656%2F1d9adc04-3479-4940-886b-abeaf7a33789.gif?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&w=1400&fit=max&s=43978b2a1a534c73eea134570ec61bab" width="300" alt="Dom操作" />
+
+#### Ref属性
+
+HTML要素やクラスコンポーネントには`ref`という特別な属性を設定することができる．  
+この属性には，`Ref`オブジェクトか関数を渡すことができる．
+
+HTML要素の`ref`属性に`Ref`オブジェクトを渡すと，`Ref.current`にそのHTML要素が格納させる．
+
+```js
+import React, { useRef, useEffect, useState } from "react";
+
+const App = () => {
+  const [state, setState] = useState(false);
+  const ref = useRef();
+
+  useEffect(() => {
+    // state が true のときは span 要素
+    // state が false のときは null
+    // 但し初回レンダー時のみ undefined
+    console.log(ref.current);
+  });
+
+  const onClick = () => {
+    setState((s) => !s);
+  };
+
+  return (
+    <div>
+      <button type="button" onClick={onClick}>
+        click
+      </button>
+      {state && <span ref={ref}>text1</span>}
+    </div>
+  );
+};
+
+export default App;
+```
+
+格納されるタイミングは, 当該要素がマウントされた後. それまではcurrentにはRefオブジェクトの初期値が入っている.
+
+ref属性に関数を渡すことができる．
+
+```js
+import React, { useState } from "react";
+
+const App = () => {
+  const [state, setState] = useState(false);
+
+  const onClick = () => {
+    setState((s) => !s);
+  };
+
+  const callbackRef = (arg) => {
+    console.log(arg); // <span>text1</span> と null が交互に表示される
+  };
+
+  return (
+    <div>
+      <button type="button" onClick={onClick}>
+        click
+      </button>
+      {state && <span ref={callbackRef}>text1</span>}
+    </div>
+  );
+};
+
+export default App;
+```
+
+既に述べたように，`Ref`オブジェクトの内容が更新されても，それが通知されることがない．  
+そのため，`ref`属性を設定している要素の状態が変わったタイミングで，何かを発火させるといったことができない．  
+そのようなことを行いたい時はk，`ref`属性に関数を渡す．この関数，およびこれを利用した手法を`コールバックRef`と呼ぶ．
+
+この関数は，それを渡した要素のマウント時，更新時，アンマウント時に実行される．  
+上の例は，ボタンを押下する度に，`span`要素のマウントとアンマウントが交互に行われる．
+
+#### TypeScriptでの挙動
+
+TypeScript環境でのReactの`useRef`は初期値と型引数の与え方によって，返り値の方が`RefObject`と`MutableObject`のどちらかになる．
+
+```ts
+interface RefObject<T> {
+  readonly current: T | null;
+}
+interface MutableRefObject<T> {
+  current: T;
+}
+```
+
+`MutableObject`になるのは以下の通り．
+
+```ts
+// 推論されて、 `MutableRefObject<null>` になる。 `null` だけが入る
+// 推論されて、 `MutableRefObject<null>` になる。 `null` だけが入る
+useRef(null);
+// 推論されて、 `MutableRefObject<undefined>` になる。 `undefined` だけが入る
+useRef(undefined);
+// 推論されて、 `MutableRefObject<number>` になる。 `number` が入る
+useRef(0);
+// `MutableRefObject<number | null>` になる。 `number` と `null` が入る
+useRef<number | null>(null);
+// `MutableRefObject<React.CSSProperties>` になる
+useRef<React.CSSProperties>({});
+// `MutableRefObject<HTMLElement | null>` になる
+useRef<HTMLElement | null>(null);
+```

@@ -1,7 +1,7 @@
 "use client";
 
-import { OrbitControls } from "@react-three/drei";
-import { Perf } from "r3f-perf";
+// import { OrbitControls } from "@react-three/drei";
+// import { Perf } from "r3f-perf";
 import { KeyboardEvent, useRef, useState } from "react";
 import { imagesType } from "./types";
 
@@ -100,7 +100,7 @@ const Gallery = () => {
         {/* フレーム */}
         <FrameList images={images} />
 
-        {/* フレーム */}
+        {/* 入力フォーム */}
         <InputText
           handleKeyPress={handleKeyPress}
           inputRef={inputRef}

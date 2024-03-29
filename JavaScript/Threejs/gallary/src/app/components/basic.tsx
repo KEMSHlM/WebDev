@@ -3,7 +3,7 @@
 import { useFrame } from "@react-three/fiber";
 import { Perf } from "r3f-perf";
 import { OrbitControls, useHelper } from "@react-three/drei";
-import React, { useRef } from "react";
+import React, { MutableRefObject, useRef } from "react";
 
 import * as THREE from "three";
 
@@ -11,8 +11,9 @@ const Basic = () => {
   const directionalLight = useRef<THREE.DirectionalLight>(null);
   const boxRef = useRef<THREE.Mesh>(null);
 
+  // React Three Fiberのヘルパーでhookだろうなこの書き方は
   useHelper(
-    directionalLight as React.MutableRefObject<THREE.DirectionalLight>,
+    directionalLight as MutableRefObject<THREE.DirectionalLight>,
     THREE.DirectionalLightHelper,
     1,
     "red",
@@ -40,6 +41,7 @@ const Basic = () => {
       {/* 環境光 */}
       <ambientLight intensity={0.5} />
 
+      {/* 直接光 */}
       <directionalLight
         castShadow
         ref={directionalLight}
