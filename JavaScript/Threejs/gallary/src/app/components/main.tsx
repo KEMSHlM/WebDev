@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import Gallery from "./gallery";
 
 import * as THREE from "three";
+import Basic from "./basic";
 
 // Main
 const Main = () => {
@@ -29,8 +30,8 @@ const Main = () => {
             position: [0, 0, 4],
           }}
         >
-          {/* <Basic /> */}
-          <Gallery />
+          <Basic />
+          {/* <Gallery /> */}
         </Canvas>
       </StrictMode>
     </div>
