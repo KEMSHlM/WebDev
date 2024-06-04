@@ -44,7 +44,50 @@ Dcokerコンテナ
 
 <img src="https://kinsta.com/wp-content/uploads/2022/10/Docker-Diagram.png" width=700>
 
+## Docker image と Docker container
+
+Dockerには，イメージとコンテナという概念がある．
+
+簡潔にいうと，  
+Docker imageは，オブジェクト指向のクラスに相当する．
+Docker containerは，オブジェクト指向のインスタンスに相当する．
+
 ## Docker Command
+
+- docker pull: イメージを取得する.
+- docker run: イメージから新しいコンテナを初期化して立ち上げる．
+  書き方は，`docker run <option> <image_name>`である．  
+  主なオプションを紹介する．
+
+  - d: バックグラウンドで実行する．
+  - it: インタラクティブモードで実行する．これは，コンテナ内でbashを実行するために使用される．
+  - p: 例えば，`-p 8080:80`で，ホストの8080ポートをコンテナの80ポートにマッピングする．
+  - e: 環境変数を指定する．
+  - v: ボリュームを指定する．
+  - link: コンテナ間を連携させる.
+
+- docker start: 既存コンテナを立ち上げる．
+- docker stop: 既存コンテナを終了させる．
+- docker ps: コンテナ一覧を表示する．
+- docker exec: 起動中のコンテナに対して，コマンドを実行する．  
+  書き方は，`docker exec <option> <container_name> <command> <command_argument>`である．
+
+- docker <something> prune: 例えば，containerが入れば，未使用のコンテナを削除する．
+
+## Dockerfile
+
+## Nvidia Docker
+
+論文コードは特定のバージョンに依存していることが多々あり，すでに構築されてある環境との競合が問題となる．  
+そのため学習の環境構築には，dockerが有用．
+
+複数バージョンが存在する．
+
+- base: 最小構成
+- runtime: baseを拡張したもの
+- devel: runtimeを拡張したもの
+
+develのみで，nvccが使える．
 
 ## 疑問
 
