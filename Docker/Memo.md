@@ -74,6 +74,16 @@ Docker containerは，オブジェクト指向のインスタンスに相当す�
 
 - docker <something> prune: 例えば，containerが入れば，未使用のコンテナを削除する．
 
+- docker build: Dockerfileからイメージをビルドする．  
+  書き方は，`-t <tag_name> -f <Dockerfile> <path>`
+
+- docker rm: コンテナを削除する．
+- docker rmi: イメージを削除する．
+
+- docker cp: コンテナとホスト間でファイルをコピーする．
+  ローカルからコンテナへのコピーは，`docker cp <local_path> <container_name>:<container_path>`である．
+  コンテナからローカルへのコピーは，`docker cp <container_name>:<container_path> <local_path>`である．
+
 ## Dockerfile
 
 ## Nvidia Docker
@@ -88,6 +98,8 @@ Docker containerは，オブジェクト指向のインスタンスに相当す�
 - devel: runtimeを拡張したもの
 
 develのみで，nvccが使える．
+
+[CUDAのコンテナはこちらから確認](https://hub.docker.com/r/nvidia/cuda)できる．
 
 ## 疑問
 
